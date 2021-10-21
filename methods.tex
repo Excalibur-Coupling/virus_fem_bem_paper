@@ -18,8 +18,7 @@ The electrostatic potential in $\Omega_1$ can be further decomposed into singula
 \end{align}
 
 Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_R$, also known as reaction potential, is originated by the polarization of the solvent. 
-Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$. 
-However, the molecule permittivity may vary in space, in which case we need to solve Equation \eqref{eq:phic} numerically.
+Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$, however, this is not the general case.
 
 There are regularized versions of Equation \eqref{eq:pbe} [HolstETal2008,GengZhao2020] which are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods.
 However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permitivitties.
@@ -33,15 +32,13 @@ A common quantity of interest in implicit solvent models is the solvation free e
 \subsection*{\sffamily \large Numerical solution of the Poisson-Boltzmann equation}
 
 \subsection*{\sffamily \large BEM-BEM coupling}
+\begin{itemize}
+    \item Direct formulation
+\end{itemize}
 
 \subsection*{\sffamily \large FEM-BEM coupling}
 
-
-
-
 \begin{itemize}
-    \item Implicit solvent model and Poisson-Boltzmann 
-    \item Regularized PB (3-term splitting)
     \item Description with constant and variable permittivity 
     \item Standard BEM-BEM and FEM-BEM coupling approach
     \item Hybrid FEM-BEM coupling
