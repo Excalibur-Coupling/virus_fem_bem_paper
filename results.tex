@@ -13,17 +13,20 @@ In the solvent region, we used the permittivity of water ($\epsilon_2$=80) and a
 \subsection*{\sffamily \large Convergence of a spherical cavity}
 
 The Kirkwood sphere [Kirkwood1934] is a standard benchmarck for the Poisson-Boltzmann equation in molecular electrostatics. 
-Here, we considered a spherical cavity with radius $R=X$ \AA, with three charges ($q_1$=a, $q_2$=b, and $q_3$=c) placed at $\mathbf{x}_1=(x_1,y_1,z_1)$, $\mathbf{x}_2=(x_2,y_2,z_2)$, and $\mathbf{x}_3=(x_3,y_3,z_3)$, which has an exact $\Delta G_{solv}=XX$ kcal/mol.
-Figure \ref{fig:error_sphere} shows the error convergence of the standard and hybrid FEM-BEM approaches, and a reference BEM implementation, to the analytical solution. 
-In these runs, the FEM mesh was generated from a surface mesh with W, X, Y, and Z vertices per \AA$^2$ on the SES, which was also used for the BEM runs. 
+Here, we considered a spherical cavity with radius $R=X$ \AA, with three charges ($q_1$=a, $q_2$=b, and $q_3$=c) placed at $\mathbf{x}_1=(x_1,y_1,z_1)$, $\mathbf{x}_2=(x_2,y_2,z_2)$, and $\mathbf{x}_3=(x_3,y_3,z_3)$.
+Figure \ref{fig:error_sphere} shows the error convergence of the standard and hybrid FEM-BEM approaches, and a reference BEM implementation, to the analytical solution ($\Delta G_{solv}=XX$ kcal/mol). 
+In these runs, the FEM mesh was generated using Bempp (check?) from a surface discretization with W, X, Y, and Z vertices per \AA$^2$ on the SES, which was also used for the BEM runs. 
+For the hybrid FEM-BEM coupling approach, we used $\tau$=XX.
+
 The error in Figure \ref{fig:error_sphere} decays linearly with the surface area, which agrees with the expected convergence for P1 elements, indicating a correct implementation of the numerical scheme. 
+We can see that the purely BEM implementation outperforms (or not?) FEM-BEM coupling in terms of accuracy for equivalent meshes, and also that the hybrid approach does not (or does?) influence accuracy. 
 
 \begin{figure}
   \centering
   \includegraphics[width=0.45\linewidth]{BEM_BEM_Sphere_const_coeff_error.png}
   \includegraphics[width=0.45\linewidth]{FEM_BEM_Sphere_const_coeff_error.png}
   \includegraphics[width=0.45\linewidth]{Hybrid_FEM_BEM_Sphere_const_coeff_error.png}
-  \caption{Error for the Kirkwood sphere. Can we put all these in a single plot and in log-log?}
+  \caption{Error for the Kirkwood sphere. Can we put all these in a single plot and in log-log? No need for percentage, I think.}
   \label{fig:error_sphere}
 \end{figure}
 
@@ -78,49 +81,107 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 %    \end{itemize}
 %\end{itemize}
 
-\subsection*{\sffamily \large Performance for a molecular geometry}
-\begin{itemize}
-    \item Use arginine or a small protein (1PGB?)
-    \begin{itemize}
-        \item BEM-BEM
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{BEM_BEM_Arginine_const_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{BEM_BEM_Arginine_const_coeff_time.png}
-  \caption{Computational time}
-\endminipage
+\subsection*{\sffamily \large Performance for arginine}
+
+As a more realistic test, we assessed the performance of the standard and hybrid FEM-BEM coupling techniques against a purely BEM implementation for arginine [cite arg]. 
+We generated surface meshes containing W, X, Y, and Z vertices per \AA$^2$ with Nanoshaper [Rocchia].
+These meshes were inputs to our purely BEM solver, and to create the FEM mesh with pyGAMer [pygamer], invoking \texttt{tetgen} with the string \texttt{abcd}.
+For the hybrid FEM-BEM coupling approach, we used $\tau$=XX.
+
+Figure \ref{fig:arg_constant_time} compares the time-to-solution with the three schemes, and shows that using only BEM outperforms both coupled FEM-BEM approaches.
+Even though hybrid FEM-BEM is slower than standard FEM-BEM in Figure \ref{fig:arg_constant_time}, the iteration count in Figure \ref{fig:arg_constant_iter} shows that hybrid FEM-BEM needs less iterations (can we compare them?). 
+This behavior is promising going towards larger problems, specially since the hybrid approach allows for more flexibility in the choice of preconditioner.
+We can also see that accuracy is not affected (or is?) by considering a FEM region inside the molecule (need fig to check this).
+
+Do we really need to compute the vacuum case numerically? We should be able to do it analytically, right?
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{BEM_BEM_Arginine_const_coeff_time.png}
+\includegraphics[width=0.45\linewidth]{FEM_BEM_Arginine_const_coeff_time.png}
+\includegraphics[width=0.45\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_time.png}
+\caption{Time-to-solution for arginine with a constant permittivity. (1) fix title, (2) can we put them in a single plot, (3) maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?}
+\label{fig:arg_contant_time}
 \end{figure}
-        \item Standard FEM-BEM
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_const_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_const_coeff_time.png}
-  \caption{Computational time}
-\endminipage
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{BEM_BEM_Arginine_const_coeff_iter.png}
+\includegraphics[width=0.45\linewidth]{FEM_BEM_Arginine_const_coeff_iter.png}
+\includegraphics[width=0.45\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_iter.png}
+\caption{Iteration count for arginine with a constant permittivity. (1) fix title, (2) can we put them in a single plot, (3) hybrid is internal or external iterations? maybe we should present the total count?}
+\label{fig:arg_contant_iter}
 \end{figure}
-        \item Hybrid FEM-BEM
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_time.png}
-  \caption{Computational time}
-\endminipage
-\end{figure}
-    \end{itemize}
-    \item Compare computer time and iterations for FEM-BEM with standard and hybrid approaches, without preconditioner. Choose hybrid.
-    \item Show performance of hybrid method with preconditioner.
-\end{itemize}
+
+
+%\begin{itemize}
+%    \item Use arginine or a small protein (1PGB?)
+%    \begin{itemize}
+%        \item BEM-BEM
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{BEM_BEM_Arginine_const_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{BEM_BEM_Arginine_const_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
+%        \item Standard FEM-BEM
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_const_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_const_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
+%        \item Hybrid FEM-BEM
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_const_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
+%    \end{itemize}
+%    \item Compare computer time and iterations for FEM-BEM with standard and hybrid approaches, without preconditioner. Choose hybrid.
+%    \item Show performance of hybrid method with preconditioner.
+%\end{itemize}
 
 \section*{\sffamily \Large Results with variable permittivity}
+
+In contrast to a purely BEM approach, FEM-BEM coupling gives flexibility to consider space-varying field parameters. 
+A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom [earlier papers], which has shown enhanced accuracy in some applications, like binding energy calculations (check) [Alexov].
+In this setting, we define a density function $\rho$ as
+%
+\begin{equation}
+\rho
+\end{equation}
+%
+where the sum is over the atoms of the solute, and we used $\sigma$=1. Then, we can compute the permittivity as
+%
+\begin{equation}
+\epsilon
+\end{equation}
+%
+
+We used Equation \eqref{eq:epsilon_gauss} to generate dielectric maps, which we ran on APBS for comparison. 
+It is important to note that in this case, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum has to be computed numerically.
+For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, however, the solvent permittivity was set to $\epsilon$=2. 
+Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff [Alexov]. 
+We did not consider a cutoff in our calculations, but this does not affect our validation exercise. 
+
+\subsection*{\sffamily \large Convergence and performance for arginine}
+
+Table \ref{table:} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approaches. We can see that they are both converging to equivalent values of solvation energy.
 
 \begin{table}
 \centering
@@ -152,44 +213,31 @@ FEM-BEM    & 8  & -32.586 \\
 \end{tabular}
 \caption{}
 \end{table}
+%
+%    \begin{itemize}
+%        \item Standard FEM-BEM
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{FEM_BEM_Sphere_varying_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{FEM_BEM_Sphere_varying_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
+%        \item Hybrid FEM-BEM
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Sphere_varying_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Sphere_varying_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
 
-    \begin{itemize}
-        \item Standard FEM-BEM
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{FEM_BEM_Sphere_varying_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{FEM_BEM_Sphere_varying_coeff_time.png}
-  \caption{Computational time}
-\endminipage
-\end{figure}
-        \item Hybrid FEM-BEM
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Sphere_varying_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Sphere_varying_coeff_time.png}
-  \caption{Computational time}
-\endminipage
-\end{figure}
-    \end{itemize}
-
-\subsection*{\sffamily \large Validation for a spherical cavity}
-
-Compare solvation energy results of hybrid FEM-BEM with Delphi
-
-\subsection*{\sffamily \large Convergence and performance for a molecular geometry}
-\begin{itemize}
-    \item Mesh refinement study using hybrid FEM-BEM and Delphi (if possible) on arginine or small protein. Check if they are converging to same result.
-    \item Compare timings for equivalent error (if possible)
-\end{itemize}
-
-    \begin{itemize}
-        \item Standard FEM-BEM
 \begin{figure}[!htb]
 \minipage{0.45\textwidth}
   \includegraphics[width=\linewidth]{FEM_BEM_Arginine_varying_coeff_iter.png}
@@ -200,7 +248,6 @@ Compare solvation energy results of hybrid FEM-BEM with Delphi
   \caption{Computational time}
 \endminipage
 \end{figure}
-        \item Hybrid FEM-BEM
 \begin{figure}[!htb]
 \minipage{0.45\textwidth}
   \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_iter.png}
@@ -211,7 +258,6 @@ Compare solvation energy results of hybrid FEM-BEM with Delphi
   \caption{Computational time}
 \endminipage
 \end{figure}
-    \end{itemize}
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
