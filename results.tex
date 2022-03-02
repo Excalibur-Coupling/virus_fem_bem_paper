@@ -174,14 +174,18 @@ where the sum is over the atoms of the solute, and we used $\sigma$=1. Then, we 
 %
 
 We used Equation \eqref{eq:epsilon_gauss} to generate dielectric maps, which we ran on APBS for comparison. 
-It is important to note that in this case, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum has to be computed numerically.
+As $\epsilon_2$ is variable, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically.
 For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, however, the solvent permittivity was set to $\epsilon$=2. 
 Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff [Alexov]. 
 We did not consider a cutoff in our calculations, but this does not affect our validation exercise. 
 
 \subsection*{\sffamily \large Convergence and performance for arginine}
 
-Table \ref{table:} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approaches. We can see that they are both converging to equivalent values of solvation energy.
+Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approaches. We can see that they are both converging to equivalent values of solvation energy, where the finest meshes agree up to the third significant figure.
+
+Figure \ref{fig:arg_variable} contains performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
+Similar to the case with constant permittivity, although the hybrid approach requires less iterations (are we counting them appropriately? meaning there are external and internal iterations), the total time to solution is less for the standard approach. This means that each iteration of hybrid FEM-BEM is slower than the standard counterpart.
+
 
 \begin{table}
 \centering
@@ -204,15 +208,27 @@ FEM-BEM    & 8  & -32.674 \\
     & 16 & -32.293 \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -29.554\\
-    & 2 & -29.554\\
-Hybrid    & 4  & -33.766 \\
-FEM-BEM    & 8  & -32.586 \\
-    & 12 & -32.891 \\
-    & 16 & -32.528 \\
+    & 2 & -35.333\\
+Hybrid    & 4  & -33.079 \\
+FEM-BEM    & 8  & -32.660 \\
+    & 12 & -32.587 \\
+    & 16 & -32.359 \\
 \hline
 \end{tabular}
-\caption{}
+\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the standard and hybrid FEM-BEM approaches, and APBS.}
+\label{table:arg_variable}
 \end{table}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{FEM_BEM_Arginine_varying_coeff_iter.png}
+\includegraphics[width=0.45\linewidth]{FEM_BEM_Arginine_varying_coeff_time.png}
+\includegraphics[width=0.45\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_iter.png}
+\includegraphics[width=0.45\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_time.png}
+\caption{Time-to-solution and iteration count to compute the solvation energy of arginine with a variable permittivity, using standard and hybrid FEM-BEM coupling. Can we make this only two plots?}
+\label{fig:arg_variable}
+\end{figure}
+
 %
 %    \begin{itemize}
 %        \item Standard FEM-BEM
@@ -238,27 +254,29 @@ FEM-BEM    & 8  & -32.586 \\
 %\endminipage
 %\end{figure}
 
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_varying_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_varying_coeff_time.png}
-  \caption{Computational time}
-\endminipage
-\end{figure}
-\begin{figure}[!htb]
-\minipage{0.45\textwidth}
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_iter.png}
-  \caption{Iterations}
-\endminipage\hfill
-\minipage{0.45\textwidth}%
-  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_time.png}
-  \caption{Computational time}
-\endminipage
-\end{figure}
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_varying_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{FEM_BEM_Arginine_varying_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
+%\begin{figure}[!htb]
+%\minipage{0.45\textwidth}
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_iter.png}
+%  \caption{Iterations}
+%\endminipage\hfill
+%\minipage{0.45\textwidth}%
+%  \includegraphics[width=\linewidth]{Hybrid_FEM_BEM_Arginine_varying_coeff_time.png}
+%  \caption{Computational time}
+%\endminipage
+%\end{figure}
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
-For a given mesh refinement, show solvation energy and timings using preconditioned hybrid FEM-BEM up to the biggest problem we can do on whatever computer we're using.
+So far, in all the small structures that we have tested, the standard approach has been more efficient than the hybrid one.
+However, the fact that there are better preconditioning strategies for the hybrid approach indicates that it may become faster for larger test cases, where conditioning of the linear system is usually more important. 
+In this section, we compare both approaches for larger structures.
