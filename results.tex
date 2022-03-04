@@ -93,11 +93,14 @@ Even though hybrid FEM-BEM is slower than standard FEM-BEM in Figure \ref{fig:ar
 This behavior is promising going towards larger problems, specially since the hybrid approach allows for more flexibility in the choice of preconditioner.
 We can also see that accuracy is not affected (or is?) by considering a FEM region inside the molecule (need fig to check this).
 
-Do we really need to compute the vacuum case numerically? We should be able to do it analytically, right?
+\begin{itemize}
+\item Do we really need to compute the vacuum case numerically? We should be able to do it analytically, right?
+\item Run BEM-BEM with the non regularized version.
+\end{itemize}
 
 \begin{figure}
 \centering
-%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
+   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
 %   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter.png}
   \includegraphics[width=0.6\linewidth]{Arginine_const_coeff_time.png}
 \caption{Time-to-solution for arginine with a constant permittivity. %(1) fix title, (2) can we put them in a single plot, (3) 
@@ -177,6 +180,7 @@ radius of atom i and we used $\sigma$=1. Then, we can compute the permittivity a
 %
 
 We used Equation \eqref{eq:epsilon_gauss} to generate dielectric maps, which we ran on APBS for comparison. 
+We chose APBS because it provides an easy interface to control de dielectric map.....
 As $\epsilon_2$ is variable, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically.
 For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, however, the solvent permittivity was set to $\epsilon$=2. 
 Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff [Alexov]. 
@@ -199,6 +203,7 @@ Similar to the case with constant permittivity, although the hybrid approach req
 \multirow{3}{*}{APBS}& 0.39$\times$0.39$\times$0.39 & -32.4042\\ 
 &0.26$\times$0.26$\times$0.26 & -32.3375\\ 
 &0.17$\times$0.17$\times$0.17 & -32.3413\\ 
+& FINER & If possible\\ 
 \hline
 &Mesh dens. & \\
 &vert/\AA$^2$ & \\
@@ -207,18 +212,16 @@ Similar to the case with constant permittivity, although the hybrid approach req
     & 2 & -36.239\\
 Standard    & 4  & -33.129 \\
 FEM-BEM    & 8  & -32.674 \\
-    & 12 & -32.648 \\
     & 16 & -32.293 \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -29.554\\
     & 2 & -35.333\\
 Hybrid    & 4  & -33.079 \\
 FEM-BEM    & 8  & -32.660 \\
-    & 12 & -32.587 \\
     & 16 & -32.359 \\
 \hline
 \end{tabular}
-\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the standard and hybrid FEM-BEM approaches, and APBS.}
+\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the standard and hybrid FEM-BEM approaches, and APBS. Add performance result?}
 \label{table:arg_variable}
 \end{table}
 
