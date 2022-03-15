@@ -3,9 +3,9 @@
 The implicit solvent model can be described mathematically as a coupled system of partial differential equations, where the Poisson-Boltzmann governs in the solvent region ($\Omega_X$ in Figure XX), and the Poisson equation in the solute region ($\Omega_Y$ in Figure XX). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous. 
 %
 \begin{align}\label{eq:pbe}
-\nabla^2\phi_1(\mathbf{x}) &= \frac{1}{\epsilon}\sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
-\left(\nabla^2 - \kappa^2\right)\phi_2 &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
-\phi_1 = \phi_2 &\quad \epsilon_1\frac{\partial\phi_1}{\partial\mathbf{n}} = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}} \quad \mathbf{x}\in \Gamma. 
+\nabla^2\phi_1(\mathbf{x}) &= \frac{1}{\epsilon_1}\sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
+\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
+\phi_1(\mathbf{x})  = \phi_2 (\mathbf{x}), &\quad \epsilon_1\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
 \end{align}
 %
 where $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute and solvent, respectively, $\kappa$ is the inverse of the Debye length, related with the salt concentration, and $q_k$ are the values of the partial charges, located at $\mathbf{x}_k$.
@@ -13,7 +13,7 @@ where $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute a
 The electrostatic potential in $\Omega_1$ can be further decomposed into singular and regular components as $\phi_1 = \phi_c + \phi_R$, where $\phi_c$ is the solution to
 %
 \begin{align}\label{eq:phic}
-\nabla^2\phi_c(\mathbf{x}) &= \frac{1}{\epsilon_1}\sum_{k=1}^{N_q}q_k\delta(\mathbf{x},\mathbf{x}_k) \quad \mathbf{x}\in\Omega_1\cup\Omega_2\nonumber\\
+\nabla^2\phi_c(\mathbf{x}) &= \frac{1}{\epsilon}\sum_{k=1}^{N_q}q_k\delta(\mathbf{x},\mathbf{x}_k) \quad \mathbf{x}\in\Omega_1\cup\Omega_2\nonumber\\
 \phi_c(\mathbf{x})&=0 \quad \text{ as } |\mathbf{x}|\to\infty
 \end{align}
 
@@ -72,6 +72,54 @@ Even though this formulation is poorly conditioned with respect to the mesh size
 
 \begin{itemize}
     \item Description with constant and variable permittivity 
-    \item Standard BEM-BEM and FEM-BEM coupling approach
+    
+BEM reduces the dimension of the problem by using the boundary integral equation, hence its popularity as a numerical solution of  the Poisson-Boltzmann equation in molecular electrostatics. Unfortunately, such advantage comes also with the cost. A fundamental solution must be found before the BEM can be applied. There are many linear problems for which fundamental solutions are not known. It is a case if we consider the heterogenous permittivity inside the molecule
+   \begin{align} \label{eq:pbe_vp}
+\epsilon_1(\mathbf{x}) \nabla^2\phi_1(\mathbf{x}) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
+\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
+\phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
+\end{align}
+For such case finite element methods (FEM) are more suitable.
+
+The coupling of finite element (FEM) and boundary element (BEM) methods is the most widely used approach for solving multi-physical problems on an unbounded domain. It allows to take advantage of both methods. On the one hand, the BEM approximates only boundary conditions, hence it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability even for problem of inhomogeneous or non-linear nature.
+And that is why, we present two formualtions of FEM-BEM coupling for Poisson-Boltzmann equation.
+    
+    \item Standard FEM-BEM coupling approach
+   
+    We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$ we have
+\begin{equation}
+\label{eq:fem}
+ \int_{\Omega_1} \epsilon_1 \nabla \phi_1 : \nabla v ~d\mathbf{x}  - \oint_\Gamma \epsilon_1\partial_n \phi_1 v ds =   \int_{\Omega_1}  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k)  v ~d\mathbf{x}.
+\end{equation}
+For external problem we use BEM and the same direct formulation as in~\eqref{eq:direct}, hence we obtain
+\begin{align*}
+\frac{\phi_{1,\Gamma}}{2} - K_{Y}^{\Gamma}(\phi_{1,\Gamma}) + \frac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{1,\Gamma} \right) & = 0.
+\end{align*}
+
     \item Hybrid FEM-BEM coupling
+    
+    The main difference between the standard and hybrid FEM-BEM formulations is addition of hybrid variable $\widetilde{\phi}$ that is a trace of $\phi_1$ and $\phi_2$ on the interface $\Gamma$ ($\widetilde{\phi} = \phi_1 = \phi_2$ on  $\Gamma$). Both FEM and BEM formulations are modified to include the hybrid variable by adding some terms that enforce the equality of it with the trace of $\phi_1$ and $\phi_2$.
+    The previous standard formulation of interior problem~\eqref{eq:fem} can be rewritten as follows
+\begin{align*}
+ \int_{\Omega_m} \frac{\epsilon_1(\mathbf{x})}{\epsilon_2} \nabla \phi_1 : \nabla v d\mathbf{x} -  \oint_\Gamma \frac{\epsilon_1(\mathbf{x})}{\epsilon_2}  \partial_n \phi_1 v ds
+  & \\
+ -  \oint_\Gamma \frac{\epsilon_1(\mathbf{x})}{\epsilon_2} \partial_n v (\phi_1 - \widetilde{\phi}) ds
+  + \tfrac{\tau_F}{h} \oint_\Gamma \frac{\epsilon_1(\mathbf{x})}{\epsilon_2} (\phi_1 - \widetilde{\phi}) v ds & = \int_{\Omega_1}  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k)   v ~d\mathbf{x}.
+\end{align*}
+With every iteration we are solving above problem for given $\widetilde{\phi}$ .
+%We are using FEniCS finite element library, hence the above formulation is more sumilar to the implementation.
+
+In the case of exterior problem of~\eqref{eq:pbe_vp} we use Yukawa kernel and 
+%matrix form, for clarity and similarity with BEMpp implementation. In this case we consider linearised formulation of the Poisson-Boltzman equation that means our operators are built as for modified Helmholtz equation with wavenumber $\kappa$.
+For given $\widetilde{\phi}$, with each iteration we are solving the following system
+\begin{align*}
+V_{Y}^{\Gamma} \lambda  - \left( \tfrac{1}{2}Id + K_{Y}^{\Gamma}  \right) u &= - \widetilde{u},  \\
+ \left( \tfrac{1}{2} Id +  K_{Y}^{',\Gamma}\right)  \lambda + \left(W_{Y}^{\Gamma} + \tau_B Id\right)  u  &= \tau_B  \widetilde{u},
+\end{align*}
+where $K'$ and $W$ are the adjoint double-layer potentials and hypersingular operator for the Yukawa kernel.
+
+Both, the interior and exterior problems have unique solutions for given $\widetilde{u}$. In order to find $\widetilde{u}$ we solve the following problem on $\Gamma$
+$$
+\tau_B \left( u_s - \widetilde{u}\right) + \tfrac{\tau_F}{h} \left( u_m - \widetilde{u}\right) - \left(\frac{\epsilon_m}{\epsilon_s} \partial_n u -\lambda\right)  = 0.
+$$
 \end{itemize}
