@@ -75,7 +75,7 @@ Even though this formulation is poorly conditioned with respect to the mesh size
     
 BEM reduces the dimension of the problem by using the boundary integral equation, hence its popularity as a numerical solution of  the Poisson-Boltzmann equation in molecular electrostatics. Unfortunately, such advantage comes with the cost. A fundamental solution must be found before the BEM can be applied. There are many linear problems for which fundamental solutions are not known. For Poisson-Boltzmann equation it is a case if we consider the heterogenous permittivity inside the molecule
    \begin{align} \label{eq:pbe_vp}
-\nabla^2 \left(\epsilon_1(\mathbf{x}) \phi_1(\mathbf{x})\right) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
+\nabla \cdot \left(\epsilon_1(\mathbf{x}) \nabla \phi_1(\mathbf{x})\right) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
 \left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
 \phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
 \end{align}
