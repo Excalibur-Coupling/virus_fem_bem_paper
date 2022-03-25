@@ -35,7 +35,7 @@ A common quantity of interest in implicit solvent models is the solvation free e
 
 The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson-Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,CooperForsythClementiBarba2016} and more recently, with Bempp-cl.~\cite{SearchCooperWout2022} 
 
-There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{SearchCooperWout2022} The simplest form was presented by Yoon and Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, which only couples the potential at the interface, and not its derivative.
+There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{SearchCooperWout2022} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better conditioned formulation presented by Lu and co-workers.~\cite{LuETal2006,LuETal2009,ZhangETal2019}
 Applying Green's second identity to Equation \eqref{eq:pbe} we get 
 %
 \begin{align} \label{eq:volume_potential}
@@ -59,14 +59,36 @@ g_Y(\mathbf{r},\mathbf{r}')=\frac{e^{-\kappa|\mathbf{r}-\mathbf{r}'|}}{4\pi|\mat
 %
 are the free-space Green's function of the Laplace and linearized Poisson-Boltzmann equations, respectively. 
 
-In the \emph{direct} formulation, we take the limit of Equation \eqref{eq:volume_potential} as $\mathbf{r}$ approaches $\Gamma$and apply the interface conditions for $\phi$ and $\epsilon\partial\phi/\partial\mathbf{n}$ to get
+If we take the limit of Eq. \eqref{eq:volume_potential} as $\mathbf{r}$ approaches $\Gamma$, we get
 %
 \begin{align} \label{eq:direct}
 \frac{\phi_{1,\Gamma}}{2}+ K_{L}^{\Gamma}(\phi_{1,\Gamma}) -  V_{L}^{\Gamma} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right) & = \frac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{r}_{\Gamma} - \mathbf{r}_k|} \nonumber \\
-\frac{\phi_{1,\Gamma}}{2} - K_{Y}^{\Gamma}(\phi_{1,\Gamma}) + \frac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{1,\Gamma} \right) & = 0
+\frac{\phi_{2,\Gamma}}{2} - K_{Y}^{\Gamma}(\phi_{2,\Gamma}) + V_{Y}^{\Gamma} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) & = 0
 \end{align}
 %
-Even though this formulation is poorly conditioned with respect to the mesh size, it can model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,WangCooperBetckeBarba2021} 
+The {\it direct} formulation\cite{YoonLenhoff1991} couples the two expressions of Eq. \eqref{eq:direct} on $\Gamma$ with the interface conditions. Even though this formulation is poorly conditioned with respect to the mesh size, it can model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,WangCooperBetckeBarba2021} 
+The formulation presented by Lu\cite{LuETal2006} takes the normal derivative of \eqref{eq:direct} to couple both $\phi$ and $\partial\phi/\partial\mathbf{n}$ as
+%
+\begin{align}\label{eq:lu}
+    & \frac{\phi_{2,\Gamma}}{2}\left(\frac{\epsilon_1}{\epsilon_2}+1\right) - \left(K_Y^\Gamma - \frac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)(\phi_{2,\Gamma}) + \left(V_Y^\Gamma - V_L^\Gamma\right)\left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) = \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{r}_{\Gamma} - \mathbf{r}_k|}
+     \nonumber \\
+    &\frac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)(\phi_{2,\Gamma}) +  \frac{1}{2}\frac{\phi_{2,\Gamma}}{\partial\mathbf{n}}\left(1+\frac{\epsilon_1}{\epsilon_2}\right) + \left(\frac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) = \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{r}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{r}_{\Gamma} - \mathbf{r}_k|}\right)
+\end{align}
+%
+The two new integral operators that appear are defined as 
+%
+\begin{align}\label{eq:adj_hyp}
+K^{\prime\Gamma}_{L,Y}(\varphi) = \oint_\Gamma \frac{g_{L,Y}}{\partial\mathbf{n}}(\mathbf{r}_\Gamma,\mathbf{r}')\varphi(\mathbf{r}')d\mathbf{r}'\nonumber\\
+W^\Gamma_{L,Y}(\varphi) = - \oint_\Gamma \frac{\partial^2 g_{L,Y}}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{r}_\Gamma,\mathbf{r}')\varphi(\mathbf{r}')d\mathbf{r}'
+\end{align}
+%
+and are called the {\it  adjoint double layer} and {\it hypersingular} operators, respectively. Note that the potential in Eq. \eqref{eq:lu} is evaluated on the exterior. 
+
+Having computed the electrostatic potential with Eq. \eqref{eq:lu}, the reaction potential ($\phi_r$) in Eq. \eqref{eq:energy} by subtracting out the Coulombic component out of $\phi_1$ in Eq. \eqref{eq:volume_potential}. This gives
+%
+\begin{align} \label{eq:phi_reac}
+\phi_{r} = - K_{L}^{\Omega_1}(\phi_{1,\Gamma}) + V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right)
+\end{align}
 
 \subsection*{\sffamily \large FEM-BEM coupling}
 
