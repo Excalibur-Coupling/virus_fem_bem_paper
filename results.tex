@@ -50,7 +50,7 @@ This behavior is promising going towards larger problems, specially since the hy
 \begin{figure}
 \centering
    \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
-   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_error.png}
+%    \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_error.png}
 \caption{Solvation energy for arginine with a constant permittivity (left: Preconditioned systems, right: No preconditioner).
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
@@ -61,7 +61,7 @@ This behavior is promising going towards larger problems, specially since the hy
 \centering
 %   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter.png}
   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time.png}
-  \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_time.png}
+%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_time.png}
 \caption{Time-to-solution for arginine with a constant permittivity (left: Preconditioned systems, right: No preconditioner). NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
@@ -73,7 +73,7 @@ This behavior is promising going towards larger problems, specially since the hy
 \centering
 %   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter.png}
-  \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_iter.png}
+%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_iter.png}
 %   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time.png}
 \caption{Iteration count for arginine with a constant permittivity (left: Preconditioned systems, right: No preconditioner). %(1) fix title, (2) can we put them in a single plot, (3) hybrid is internal or external iterations? maybe we should present the total count?
 }
@@ -132,14 +132,14 @@ Similar to the case with constant permittivity, although the hybrid approach req
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
     & 2 & -36.239\\
 Standard    & 4  & -33.129 \\
-FEM-BEM    & 8  & -32.674 \\
+FEM-BEM    & 8  & -32.673 \\
     & 16 & -32.293 \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -29.554\\
-    & 2 & -35.333\\
-Hybrid    & 4  & -33.079 \\
-FEM-BEM    & 8  & -32.660 \\
-    & 16 & -32.359 \\
+    & 2 & -34.408\\
+Hybrid    & 4  & -32.815 \\
+FEM-BEM    & 8  & -32.566 \\
+    & 16 & -32.379 \\
 \hline
 \end{tabular}
 \caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the standard and hybrid FEM-BEM approaches, and APBS. Add performance result?}
