@@ -8,19 +8,19 @@ The implicit solvent model can be described mathematically as a coupled system o
 \phi_1(\mathbf{x})  = \phi_2 (\mathbf{x}), &\quad \epsilon_1\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
 \end{align}
 %
-where $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute and solvent, respectively, $\kappa$ is the inverse of the Debye length, related with the salt concentration, and $q_k$ are the values of the partial charges, located at $\mathbf{x}_k$.
+Here, $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute and solvent, respectively, $\kappa$ is the inverse of the Debye length, related with the salt concentration, and $q_k$ are the values of the partial charges, located at $\mathbf{x}_k$.
 
-The electrostatic potential in $\Omega_1$ can be further decomposed into singular and regular components as $\phi_1 = \phi_c + \phi_R$, where $\phi_c$ is the solution to
+The electrostatic potential in $\Omega_1$ can be further decomposed into singular and regular components as $\phi_1 = \phi_c + \phi_r$, where $\phi_c$ is the solution to
 %
 \begin{align}\label{eq:phic}
 \nabla^2\phi_c(\mathbf{x}) &= \frac{1}{\epsilon}\sum_{k=1}^{N_q}q_k\delta(\mathbf{x},\mathbf{x}_k) \quad \mathbf{x}\in\Omega_1\cup\Omega_2\nonumber\\
 \phi_c(\mathbf{x})&=0 \quad \text{ as } |\mathbf{x}|\to\infty
 \end{align}
 
-Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_R$, also known as reaction potential, is originated by the polarization of the solvent. 
+Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_r$, also known as reaction potential, is originated by the polarization of the solvent and reorganization of the free ions. 
 Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$, however, this is not the general case.
 
-There are regularized versions of Equation \eqref{eq:pbe} [HolstETal2008,GengZhao2020] which are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods.
+There are regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} which are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods.
 However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permitivitties.
 
 A common quantity of interest in implicit solvent models is the solvation free energy, which the change in Gibbs free energy as the molecule moves from vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
@@ -33,17 +33,17 @@ A common quantity of interest in implicit solvent models is the solvation free e
 
 \subsection*{\sffamily \large BEM-BEM coupling}
 
-The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson-Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,CooperForsythClementiBarba2016} and more recently, with Bempp-cl.~\cite{SearchCooperWout2022} 
+The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson-Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,cooper2016pygbe} and more recently, with Bempp-cl.~\cite{search2022towards} 
 
-There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{SearchCooperWout2022} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better conditioned formulation presented by Lu and co-workers.~\cite{LuETal2006,LuETal2009,ZhangETal2019}
+There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{search2022towards} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better conditioned formulation presented by Lu and co-workers.~\cite{LuETal2006,LuETal2009,debuhr2016dashmm}
 Applying Green's second identity to Equation \eqref{eq:pbe} we get 
 %
 \begin{align} \label{eq:volume_potential}
-\phi_{1}+ K_{L}^{\Omega_1}(\phi_{1,\Gamma}) -  V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right) & = \frac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{r}_{\Omega_1} - \mathbf{r}_k|}  \quad \text{on $\Omega_1$,} \nonumber \\
-\phi_{2} - K_{Y}^{\Omega_2}(\phi_{2,\Gamma}) + V_{Y}^{\Omega_2} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) & = 0 \quad \text{on $\Omega_2$,}
+\phi_{1}(\mathbf{r}_{\Omega_1})+ K_{L}^{\Omega_1}(\phi_{1,\Gamma}) -  V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right) & = \frac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{r}_{\Omega_1} - \mathbf{r}_k|}  \quad \text{on $\Omega_1$,} \nonumber \\
+\phi_{2}(\mathbf{r}_{\Omega_2}) - K_{Y}^{\Omega_2}(\phi_{2,\Gamma}) + V_{Y}^{\Omega_2} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) & = 0 \quad \text{on $\Omega_2$,}
 \end{align}
 %
-where $\phi_{1,\Gamma} = \phi_1(\mathbf{r}_\Gamma)$ and $\phi_{2,\Gamma} = \phi_2(\mathbf{r}_\Gamma)$ is the potential on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. $K$ and $V$ are the double- and single-layer potentials for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels
+where $\mathbf{r}_\Omega$ is evaluated anywhere in the correspoding domain, except $\Gamma$, and $\phi_{1,\Gamma} = \phi_1(\mathbf{r}_\Gamma)$ and $\phi_{2,\Gamma} = \phi_2(\mathbf{r}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. $K$ and $V$ are the double- and single-layer potentials for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels
 %
 \begin{align}\label{eq:single_double}
 V^\Omega_{L,Y}(\varphi) = \oint_\Gamma g_{L,Y}(\mathbf{r}_\Omega,\mathbf{r}')\varphi(\mathbf{r}')d\mathbf{r}'\nonumber\\
@@ -59,14 +59,14 @@ g_Y(\mathbf{r},\mathbf{r}')=\frac{e^{-\kappa|\mathbf{r}-\mathbf{r}'|}}{4\pi|\mat
 %
 are the free-space Green's function of the Laplace and linearized Poisson-Boltzmann equations, respectively. 
 
-If we take the limit of Eq. \eqref{eq:volume_potential} as $\mathbf{r}$ approaches $\Gamma$, we get
+If we take the limit of Eq. \eqref{eq:volume_potential} as $\mathbf{r}_{\Omega}$ approaches $\Gamma$, we get
 %
 \begin{align} \label{eq:direct}
 \frac{\phi_{1,\Gamma}}{2}+ K_{L}^{\Gamma}(\phi_{1,\Gamma}) -  V_{L}^{\Gamma} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right) & = \frac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{r}_{\Gamma} - \mathbf{r}_k|} \nonumber \\
 \frac{\phi_{2,\Gamma}}{2} - K_{Y}^{\Gamma}(\phi_{2,\Gamma}) + V_{Y}^{\Gamma} \left( \frac{\partial}{\partial \mathbf{n}} \phi_{2,\Gamma} \right) & = 0
 \end{align}
 %
-The {\it direct} formulation\cite{YoonLenhoff1991} couples the two expressions of Eq. \eqref{eq:direct} on $\Gamma$ with the interface conditions. Even though this formulation is poorly conditioned with respect to the mesh size, it can model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,WangCooperBetckeBarba2021} 
+The {\it direct} formulation\cite{YoonLenhoff1990} couples the two expressions of Eq. \eqref{eq:direct} on $\Gamma$, considering the interface conditions. Even though this formulation is poorly conditioned with respect to the mesh size, it can still model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,MartinezETal2019,wang2021high} 
 The formulation presented by Lu\cite{LuETal2006} takes the normal derivative of \eqref{eq:direct} to couple both $\phi$ and $\partial\phi/\partial\mathbf{n}$ as
 %
 \begin{align}\label{eq:lu}
@@ -84,11 +84,13 @@ W^\Gamma_{L,Y}(\varphi) = - \oint_\Gamma \frac{\partial^2 g_{L,Y}}{\partial\math
 %
 and are called the {\it  adjoint double layer} and {\it hypersingular} operators, respectively. Note that the potential in Eq. \eqref{eq:lu} is evaluated on the exterior. 
 
-Having computed the electrostatic potential with Eq. \eqref{eq:lu}, the reaction potential ($\phi_r$) in Eq. \eqref{eq:energy} by subtracting out the Coulombic component out of $\phi_1$ in Eq. \eqref{eq:volume_potential}. This gives
+Having computed the electrostatic potential with Eq. \eqref{eq:lu}, we obtain the reaction potential ($\phi_r$) in Eq. \eqref{eq:dG} by subtracting out the Coulombic component out of $\phi_1$ in Eq. \eqref{eq:volume_potential}. This gives
 %
 \begin{align} \label{eq:phi_reac}
-\phi_{r} = - K_{L}^{\Omega_1}(\phi_{1,\Gamma}) + V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right)
+\phi_{r} = - K_{L}^{\Omega_1}(\phi_{1,\Gamma}) + V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_{1,\Gamma}  \right),
 \end{align}
+%
+which is valid as long as $\epsilon_1$ is a constant.
 
 \subsection*{\sffamily \large FEM-BEM coupling}
 
