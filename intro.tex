@@ -1,13 +1,13 @@
-In biologically relevant settings, the structure and function of biomolecules is largely determined by the surrounding water with salt. 
-To describe these systems accurately, we need to account for the solvent correctly, which has given rise to a wide range of models [cite water review]
-Highly detailed models consider every water molecule and salt ion explicitly, however, there are approximated models that use continuum theory to represent this ionic solution, knwon as implicit-solvent models [SimonsonRoux, DescherchiRocchia].
-In the case of electrostatics, the implicit-solvent model is mathematically characterized by the Poisson-Boltzmann equation (PBE) [Baker,Bardhan], which is widely used to compute solvation free energies and mean-field potentials.
+In biologically relevant settings, the structure and function of biomolecules is largely determined by the surrounding water, which usually contains salt. 
+To describe these systems accurately, we need to account for the solvent correctly, which has given rise to a wide range of models \cite{onufriev2018water}
+Highly detailed models consider every water molecule and salt ion explicitly, however, there are approximated models that use continuum theory to represent this ionic solution, knwon as implicit-solvent models\cite{RouxSimonson1999,DecherchiETal2015}.
+In the case of electrostatics, the implicit-solvent model is mathematically characterized by the Poisson-Boltzmann equation (PBE)\cite{Baker2004,Bardhan2012}, which is widely used to compute solvation free energies and mean-field potentials.
 
-The implicit-solvent model for electrostatics describes the dissolved molecule as a infinite medium with a low-dielectric solute-shaped cavity, which contains a charge distribution from the partial charges (usually a sum of Dirac deltas at the atom's locations).
+The implicit-solvent model for electrostatics describes the dissolved molecule as a infinite medium with a low-dielectric solute-shaped cavity, which contains a charge distribution from the partial charges --- usually a sum of Dirac deltas at the atom's locations.
 The outer solvent region is represented with a high dielectric, and considers the presence of salt.
-These two regions are interfaced by the molecular surface, which can be defined in various ways [cite], where the continuity of the electrostatic potential and electric displacement are enforced.
+These two regions are interfaced by the molecular surface, which can be defined in various ways \cite{HarrisBoschitcshFenley2013}, where the continuity of the electrostatic potential and electric displacement are enforced.
 
-The PBE has been solved numerically with finite difference [cite], finite element [cite], boundary element [cite], and analytical [cite] methods.
+The PBE has been solved numerically with finite difference\cite{BakerETal2001,GilsonETal1985,JurrusETal2018,LiETal2019}, finite element\cite{HolstETal2012,BondEtal2010}, boundary element\cite{AltmanBardhanWhiteTidor09,LuETal2006,GengKrasny2013,CooperBardhanBarba2014}, and analytical\cite{YapHeadgordon2010,FelbergETal2017} methods.
 In particular, the boundary element method (BEM) has proven to be very efficient for high accuracy calculations [GengKrasny2013,CooperBardhanBarba2014], mainly due to the precise description of the molecular surface and point charges. 
 However, BEM is limited to constant material properties in each region, and the linear version of the PBE. 
 Even though these limitations are acceptable in a wide range of applications, there are cases when BEM falls short, for example, if a variable permittivity is required inside the solute [cite], or the solute is highly charged such that the linear approximation breaks [cite?].
