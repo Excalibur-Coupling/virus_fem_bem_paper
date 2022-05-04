@@ -132,42 +132,68 @@ Using the above definition the discrete problem~\eqref{eq:fem_bem_disctrete} can
 Having computed the electrostatic potential with Eq. \eqref{eq:lu_disc}, we obtain the reaction potential ($\phi_r$) in Eq. \eqref{eq:dG} by subtracting out the Coulombic component out of $\phi_1$ in Eq. \eqref{eq:volume_potential}. This gives
 %
 \begin{align} \label{eq:phi_reac}
-\phi_{r} = - K_{L}^{\Omega_1}(\phi_1) + V_{L}^{\Omega_1} \left(\frac{\partial}{\partial \mathbf{n}}  \phi_1  \right),
+\phi_{r} = - K_{L}^{\Omega_1}(\phi_1) + V_{L}^{\Omega_1} \left(  \lambda_1  \right),
 \end{align}
 %
-which is valid as long as $\epsilon_1$ is a constant.
+which is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
 
 \subsection*{\sffamily \normalsize FEM-BEM coupling}
 
-{\sffamily \small Description with constant and variable permittivity} 
 
-BEM reduces the dimension of the problem by using the boundary integral equation, hence its popularity as a numerical solution of  the Poisson-Boltzmann equation in molecular electrostatics. Unfortunately, such advantage comes with the cost. A fundamental solution must be found before the BEM can be applied. There are many linear problems for which fundamental solutions are not known. For Poisson-Boltzmann equation it is a case if we consider the heterogenous permittivity inside the molecule
+BEM is a popular alternative to solve the Poisson-Boltzmann equation numerically because it reduces the dimension of the problem by using the boundary integral formulation. Unfortunately, this advantage comes at a cost: it requires a fundamental solution to be applied. There are many linear problems for which fundamental solutions are not known, for example, this is the case for the Poisson-Boltzmann equation with a heterogenous permittivity inside the molecule
+%
    \begin{align} \label{eq:pbe_vp}
 \nabla \cdot \left(\epsilon_1(\mathbf{x}) \nabla \phi_1(\mathbf{x})\right) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
 \left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
-\phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
+\phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2(\mathbf{x})\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
 \end{align}
-For such case finite element methods (FEM) are more suitable.
+%
+For such case, a finite element method (FEM) is more suitable.
 
-The coupling of finite element (FEM) and boundary element (BEM) methods is the most widely used approach for solving multi-physical problems on an unbounded domain. It allows to take advantage of both methods. On the one hand, the BEM approximates only boundary conditions, hence it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability even for problem of inhomogeneous or non-linear nature.
-And that is why, we present two formulations of FEM-BEM coupling for Poisson-Boltzmann equation.
+The coupling of finite element (FEM) and boundary element (BEM) methods is a widely used approach to solve multi-physical problems on unbounded domains [citation?], as it takes advantage of both methods. On one hand, the BEM satifies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces, hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
     
-{\sffamily \small Standard FEM-BEM coupling approach}
-   
-   As mentioned before we will use finite element discretisation for internal problem on domain $\Omega_1$ and boundary elements for external domain $\Omega_2$. The formulation below can be applied for homogeneous and heterogeneous $\epsilon_1$, hence for simplicity we do not distinguish between these cases in the formulation.
     
-    We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$ we have
+{\sffamily \small Modeling the solute with a Gaussian-based variable permittivity}\\
+
+In contrast to a purely BEM approach, FEM-BEM coupling gives flexibility to consider space-varying field parameters. 
+A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom,\cite{grant2001smooth} which has shown enhanced accuracy in some applications, like pKa calculations.\cite{li2013dielectric}
+In this setting, we define a density function $\rho$ depending on position $r$ as
+%
+\begin{equation}
+\rho(r) := \prod_i \left(1 - \exp{\left(\frac{\|r-\mathbf{x}_i\|}{\sigma^2 R_i^2}\right)}\right)
+\end{equation}
+%
+where the product runs over all the atoms of the solute, $R_i$ is the van der Waals radius of atom i, and we used $\sigma$=1. Then, we can compute the permittivity as
+%
+\begin{equation}\label{eq:varying_eps}
+\epsilon := \left(1-\rho \right) \epsilon_1 + \rho\epsilon_2
+\end{equation}
+
+As $\epsilon_2$ is variable, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically.
+For vacuum calculations, we considered the same distribution of $\epsilon_2$ inside the molecule as in the solvated case, but the solvent permittivity was set to $\epsilon$=2. 
+Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
+
+
+
+{\sffamily \small The Johnson-N\'ed\'elec FEM-BEM coupling for molecular electrostatics}\\
+
+   We modeled the electrostatic component of solvation of a solute with a Gaussian-varying permittivit (Eq. \eqref{eq:varying_eps}) with a finite element discretisation in the internal domain ($\Omega_1$), and boundary elements for external domain ($\Omega_2$). We used the Johnson-N\'ed\'elec formulation [citation needed], which is the simplest form of FEM-BEM coupling, and we detail it next.
+
+   We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$, we have
+% 
 \begin{equation}
 \label{eq:fem}
  \left( \epsilon_1 \nabla \phi_1, \nabla v \right)_{\Omega_1}  -  \left<  \epsilon_1\partial_n \phi_1, v \right>_\Gamma =  \left( \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v\right)_{\Omega_1},
 \end{equation}
+%
 where $v$ is a test function, and $\left<\varphi,v\right>_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ and $\left(\varphi,v\right)_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ are the inner products on the surface and domain, respectively.
-For external problem we use BEM and the same direct formulation as in~\eqref{eq:direct}, hence we obtain
+For the external problem with BEM, we use the direct formulation from Eq.~\eqref{eq:direct} to obtain
 \begin{align*}
-\tfrac{\phi_1}{2} - K_{Y}^{\Gamma}(\phi_1) + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left( \frac{\partial}{\partial \mathbf{n}} \phi_1 \right) & = 0.
+\tfrac{\phi_1}{2} - K_{Y}^{\Gamma}(\phi_1) + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma}  \left(\lambda_1 \right) & = 0.
 \end{align*}
-
-Using the above definition and assuming that $\lambda_2  = \frac{\partial}{\partial \mathbf{n}} \phi_1 $ the coupling problem can be written as follows
+%
+Then, the coupling problem can be written as
+%
 \begin{center}
   \textit{Find $ \phi_1 \in H^1(\Omega_1)$ and $\lambda_2 \in H^{-\frac{1}{2}}(\Gamma)$ such that for all $v \in H^1(\Omega_1)$ and $\zeta \in H^{-\frac{1}{2}}(\Gamma)$}
 \begin{equation} 
@@ -187,9 +213,9 @@ Using the above definition and assuming that $\lambda_2  = \frac{\partial}{\part
 % \oint_\Gamma \tfrac{\phi_1}{2} - K_{Y}^{\Gamma}(\phi_1) + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left( \lambda_2^1 \right) & = 0
 %\end{align}
 
-We introduce below the matrix formulation. Let $\vec{\phi}_1 := [\phi_1^1, \dots, \phi_1^j]^T$ be the vector of canonical basis
+This can also be written in matrix form. Let $\vec{\phi}_1 := [\phi_1^1, \dots, \phi_1^j]^T$ be the vector of canonical basis
 functions of the finite element space $V_{h}^{j}$, %$\vec{\phi}_2 := [\phi_2^1, \dots, \phi_2^k]^T$ - the vector of canonical basis functions of $W_{h}^{k}$,  
-$\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ - the vector of canonical basis
+$\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ --- the vector of canonical basis
 functions of $\Lambda_{h}^{l}$. % and $\vec{\widetilde{\phi}} := [\widetilde{\phi}^1, \dots, \widetilde{\phi}^m]^T$ be the vector of canonical basis functions of  $M_{h}^{m}$
 % $T:\Omega_1 \rightarrow \Gamma$ and $E:\Gamma \rightarrow \Omega_1$ trace and extendable operators respectively.
 We define the following matrices  associated with the corresponding bilinear forms
@@ -205,7 +231,7 @@ and vector associated with the corresponding linear form
 \begin{equation*}
 \vec{f}_{\beta} := \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  \phi_1^{\beta} \right)_{\Omega_1}.
 \end{equation*}
-Using the above definition the discrete problem~\eqref{eq:standard_fem_bem} can be written in the following matrix form
+Using the above definition the discrete problem in Eq.~\eqref{eq:standard_fem_bem} can be written in the following matrix form
 \begin{align*}
 \begin{bmatrix}
 \epsilon_1 A &  - \epsilon_1 M^T \\  
@@ -222,133 +248,3 @@ Using the above definition the discrete problem~\eqref{eq:standard_fem_bem} can 
 \end{bmatrix}.
 \end{align*}
 
-
-{\sffamily \small Hybrid FEM-BEM coupling}
-    
-  In the previous section, we focused on the standard formulation. Now, we propose the weak penalty formulation of a couple problem. The discretisation is made by using finite element methods in the domain $\Omega_1$ and boundary integral methods in the domain $\Omega_2$.
-  
-    The main difference between the standard and hybrid FEM-BEM formulations is addition of hybrid variable $\widetilde{\phi}$ that is a trace of $\phi_1$ and $\phi_2$ on the interface $\Gamma$ ($\widetilde{\phi} = \phi_1 = \phi_2$ on  $\Gamma$). Both FEM and BEM subproblems are modified to include the hybrid variable by adding some terms that enforce the equality of it with the trace of $\phi_1$ and $\phi_2$.
-    
-    The standard formulation of interior problem~\eqref{eq:fem} can be rewritten as follows
-\begin{align*}
- \left(  \tfrac{\epsilon_1(\mathbf{x})}{\epsilon_2} \nabla \phi_1, \nabla v \right)_{\Omega_1} -  \left<  \tfrac{\epsilon_1(\mathbf{x})}{\epsilon_2}  \partial_n \phi_1, v \right>_\Gamma
-  & \\
- -  \left<  \tfrac{\epsilon_1(\mathbf{x})}{\epsilon_2} \partial_n v, (\phi_1 - \widetilde{\phi}) \right>_\Gamma
-  + \tfrac{\tau_F}{h} \left<  \tfrac{\epsilon_1(\mathbf{x})}{\epsilon_2} (\phi_1 - \widetilde{\phi}), v \right>_\Gamma & = \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),   v \right)_{\Omega_1}.
-\end{align*}
-With every iteration we are solving above problem for given $\widetilde{\phi}$ and hence obtaining the solution $ \phi_1$.
-%We are using FEniCS finite element library, hence the above formulation is more sumilar to the implementation.
-
-In the case of exterior problem of~\eqref{eq:pbe_vp} we use Yukawa kernel and 
-%matrix form, for clarity and similarity with BEMpp implementation. In this case we consider linearised formulation of the Poisson-Boltzman equation that means our operators are built as for modified Helmholtz equation with wavenumber $\kappa$.
-for given $\widetilde{\phi}$, with each iteration we are solving the following system
-\begin{align*}
-V_{Y}^{\Gamma} \lambda_2  - \left( \tfrac{1}{2}I + K_{Y}^{\Gamma}  \right) \phi_2 &= - \widetilde{\phi},  \\
- \left( \tfrac{1}{2} I +  K_{Y}^{'\Gamma}\right)  \lambda_2 + \left(W_{Y}^{\Gamma} + \tau_B I\right)  \phi_2  &= \tau_B \widetilde{\phi},
-\end{align*}
-where $K'$ and $W$ are the adjoint double-layer potentials and hypersingular operator for the Yukawa kernel.
-
-Both, the interior and exterior problems have unique solutions for given $\widetilde{\phi}$. In order to find $\widetilde{\phi}$ we solve the following problem on $\Gamma$
-\begin{equation*}
-\tfrac{\tau_F}{h} \left( \phi_1 - \widetilde{\phi}\right) + \tau_B \left( \phi_2 - \widetilde{\phi}\right)  - \left(\tfrac{\epsilon_1}{\epsilon_2} \frac{\partial}{\partial \mathbf{n}} \phi_1 -\lambda_2 \right)  = 0.
-\end{equation*}
-
-We introduce below the matrix formulation and algorithm used for implementation. Let $\vec{\phi}_1 := [\phi_1^1, \dots, \phi_1^j]^T$ be the vector of canonical basis
-functions of the finite element space $V_{h}^{j}$, $\vec{\phi}_2 := [\phi_2^1, \dots, \phi_2^k]^T$ - the vector of canonical basis
-functions of $W_{h}^{k}$,  $\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ - the vector of canonical basis
-functions of $\Lambda_{h}^{l}$ and $\vec{\widetilde{\phi}} := [\widetilde{\phi}^1, \dots, \widetilde{\phi}^m]^T$ be the vector of canonical basis
-functions of  $M_{h}^{m}$. We define the following matrices associated with the corresponding bilinear forms
-\begin{center}
-$A_{\alpha \beta} = \left(  \tfrac{\epsilon_1(\mathbf{x})}{\epsilon_2} \nabla \phi^{\alpha}_1, \nabla \phi^{\beta}_1  \right)_{\Omega_1}  - \left< \partial_n \phi^{\alpha}_1 ,  \phi^{\beta}_1 \right>_{\Gamma}   - \left< \phi^{\alpha}_1  , \ \partial_n \phi^{\beta}_1  \right>_{\Gamma}   + \tfrac{\tau_F}{h} \left< \phi^{\alpha}_1 ,\ \phi^{\beta}_1  \right>_{\Gamma}, $                                                                                                                                                                                                                                                                                                        \end{center}
-\vspace{-15pt}
-\begin{align*}
-B_{\alpha \beta} = \left< \widetilde{\phi}^{\alpha}, \ \partial_n \phi^{\beta}_1  \right>_{\Gamma} - \tfrac{\tau_F}{h} \left< \widetilde{\phi}^{\alpha},\ \phi^{\beta}_1  \right>_{\Gamma} 
- &,& 
-M_{\alpha \beta} =\left< \widetilde{\phi}^{\alpha}, \ \lambda^{\beta}_2 \right>_{\Gamma}, \\
-K'_{\alpha \beta} = \left<K_{Y}^{'\Gamma} \lambda^{\alpha}_2, \ \phi^{\beta}_2 \right>_{\Gamma}
- &,&
-V_{\alpha \beta} = \left<V_{Y}^{\Gamma} \lambda^{\alpha}_2, \ \lambda^{\beta}_2 \right>_{\Gamma}, \\
-W_{\alpha \beta} = \left< W_{Y}^{\Gamma} \phi^{\alpha}_2, \ \phi^{\beta}_2 \right>_{\Gamma}
- &,&
-K_{\alpha \beta} = -\left<K_{Y}^{\Gamma} \phi^{\alpha}_2, \ \lambda^{\beta}_2 \right>_{\Gamma},
-\end{align*}
-and vector associated with the corresponding linear form
-\begin{equation*}
-\vec{f}_{\beta} = \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),   \phi^{\beta}_1 \right)_{\Omega_1}.
-\end{equation*}
-
-Using the above definition the discrete problem~\eqref{eq:fem_bem_disctrete} can be written in the following matrix form
-\begin{align*}
-\begin{bmatrix}
-A & 0 & 0 & B \\  
-0 & \tfrac12 I + K &  V & - \tau_B I \\
-0 & \tau_B I + W & \tfrac12 I - K' & M \\
-B^T & - \tau_B I & -M^T & \left(\tfrac{\tau_F}{h} + \tau_B\right) I
-\end{bmatrix}
-\begin{bmatrix}
-\vec{\phi}_1 \\  
-\vec{\phi}_2 \\
-\vec{\lambda}_2 \\
-\vec{\widetilde{\phi}}
-\end{bmatrix}
-= 
-\begin{bmatrix}
-\vec{f} \\  
-0 \\
-0 \\
-0
-\end{bmatrix}.
-\end{align*}
-To solve this system we use the Schur complement and the Steklov-Poincar\'e  operator to eliminate all variables except the hybrid one as follows
-\begin{align}
-\label{eq:Schur}
-\left(\left(\tfrac{\tau_F}{h} + \tau_B\right) I  - B^T A^{-1} B + \begin{bmatrix} \tau_B I & M^T \end{bmatrix} \begin{bmatrix}
-\tfrac12 I + K &  V  \\
-\tau_B I + W & \tfrac12 I - K'
-\end{bmatrix}^{-1}
-\begin{bmatrix}
- -\tau_B I \\
-M
-\end{bmatrix} 
-\right) \vec{\widetilde{\phi}}
-= -B^T A^{-1} \vec{f}
-\end{align}
-
-
-In our experiment tests we consider $\mathcal{V}_h\times \Lambda_{h}^{l} \times M_{h}^{m}$ with $j = k = m = l = 1$. We let the interface meshes  coincide with the trace mesh of volume mesh on $\Gamma$. %As we know from our experiments as well as the one performed in~\cite{MR3945809}, there is a flexibility with the  choice of positive parameter $\tau_B$, hence for simplicity we use $\tau_B = 1$.
-
-For our experiments we use two numerical softwares: FEniCS~\cite{AlnaesBlechta2015a} and Bempp~\cite{SmigajEtAl2015}.
-We use the solution of interior and exterior Dirichlet boundary value problems to construct a Schur complement system~\eqref{eq:Schur}.
-The solution $\vec{\widetilde{\phi}}$ on $\Gamma$ of the eliminated system~\eqref{eq:Schur} is obtained using the nested MINRES method~\cite{}. Although one can use direct solvers to solve the interior and exterior Dirichlet boundary value problems, we here used preconditioned iterative solvers suitable for large scale applications.  The interior Dirichlet boundary value problem is solved by using FEniCS and generalized minimal residual method (GMRES)~\cite{MR848568} without and with incomplete Cholesky preconditioner. The discrete exterior problem is solved by using the GMRES without or with mass matrix preconditioner to solve in Bempp the external Dirichlet boundary value problem.
-The tolerance of the iterative solvers is chosen to be not greater the $10^{-6}$. 
-Overall, the algorithm has the following structure:
-\begin{enumerate}
- \item Assemble the FE weak form in FEniCS and define matrix-vector formulation  using GMRES with tolerance $10^{-8}$
- \begin{equation*}
- LHS_{FEM} := B^T A^{-1} B \vec{\widetilde{\phi}} .
- \end{equation*}
- \item Assemble BE operators in BEMpp and define matrix-vector formulation 
-using GMRES with tolerance $10^{-8}$
- \begin{equation*}
- LHS_{BEM} := \begin{bmatrix} \tau_B I & M^T \end{bmatrix} \begin{bmatrix}
-\tfrac12 I + K &  V  \\
-\tau_B I + W & \tfrac12 I - K'
-\end{bmatrix}^{-1}
-\begin{bmatrix}
- -\tau_B I \\
-M
-\end{bmatrix} 
-\vec{\widetilde{\phi}}  .
- \end{equation*}
- \item Combine matrix-vector formulation of interior and exterior problem in the lhs of~\eqref{eq:Schur}.
- \item Build rhs of~\eqref{eq:Schur}
- \begin{equation*}
- RHS := -B^T A^{-1} \vec{f}.
- \end{equation*}
- \item Solve the reduced system using MINRES with tolerance $10^{-6}$.
- \begin{equation*}
- \left(\tfrac{\tau_F}{h} + \tau_B\right) I \vec{\widetilde{\phi}}  - LHS_{FEM} + LHS_{BEM} = RHS .
- \end{equation*}
- \item Use solution $\vec{\widetilde{\phi}}$ to obtain the solution $\vec{\phi}$ by solving the interior problem or to obtain the solution $\begin{bmatrix} \vec{\phi}_2 \\ \vec{\lambda}_2 \end{bmatrix}$ by solving the exterior problem.
- \item Calculate the solvation energy.
-\end{enumerate}

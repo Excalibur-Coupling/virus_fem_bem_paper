@@ -32,20 +32,12 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 
 \subsection*{\sffamily \large Performance with arginine}
 
-As a more realistic test, we assessed the performance of the standard and hybrid FEM-BEM coupling techniques against a purely BEM implementation for arginine [cite arg]. 
-We generated surface meshes containing W, X, Y, and Z vertices per \AA$^2$ with Nanoshaper [Rocchia].
-These meshes were inputs to our purely BEM solver, and to create the FEM mesh with pyGAMer [pygamer], which invoked \texttt{tetgen} with the string \texttt{abcd}.
-For the hybrid FEM-BEM coupling approach, we used $\tau$=5.
+As a more realistic test, we assessed the performance of the FEM-BEM coupling technique against a purely BEM implementation for arginine [cite arg]. 
+We generated surface meshes containing W, X, Y, and Z vertices per \AA$^2$ with Nanoshaper.~\cite{decherchi2013general}
+These meshes were inputs to our purely BEM solver, and to create the FEM mesh with pyGAMer,~\cite{lee2020open} which invoked \texttt{tetgen} [citation] with the string \texttt{abcd}.
 
 The solvation energy computed with the three schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Then, Figure \ref{fig:arg_constant_time} compares the time-to-solution, and shows that using only BEM outperforms both coupled FEM-BEM approaches.
-Even though hybrid FEM-BEM is slower than standard FEM-BEM in Figure \ref{fig:arg_constant_time}, the iteration count in Figure \ref{fig:arg_constant_iter} shows that hybrid FEM-BEM needs less iterations (can we compare them?). 
-This behavior is promising going towards larger problems, specially since the hybrid approach allows for more flexibility in the choice of preconditioner.
-
-\begin{itemize}
-\item Do we really need to compute the vacuum case numerically? We should be able to do it analytically, right?
-\item Run BEM-BEM with the non regularized version.
-\end{itemize}
+Then, Figure \ref{fig:arg_constant_time} compares the time-to-solution, and shows that using only BEM outperforms the coupled FEM-BEM approach.
 
 
 \begin{figure}
@@ -64,7 +56,8 @@ This behavior is promising going towards larger problems, specially since the hy
   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time_11.png}
   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_setup_time_11.png}
 %   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_time.png}
-\caption{Time-to-solution for arginine with a constant permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems). NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
+\caption{Time-to-solution for arginine with a constant permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems). 
+%NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
 \label{fig:arg_constant_time}
@@ -86,36 +79,14 @@ This behavior is promising going towards larger problems, specially since the hy
 
 \section*{\sffamily \Large Results with variable permittivity}
 
-In contrast to a purely BEM approach, FEM-BEM coupling gives flexibility to consider space-varying field parameters. 
-A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom [earlier papers], which has shown enhanced accuracy in some applications, like binding energy calculations (check) [Alexov].
-In this setting, we define a density function $\rho$ depending on position $r$ as
-%
-\begin{equation}
-\rho(r) := \prod_i \left(1 - \exp{\left(\frac{\|r-\mathbf{x}_i\|}{\sigma^2 R_i^2}\right)}\right)
-\end{equation}
-%
-where the product is over the atoms of the solute, $R_i$ is the vdW
-radius of atom i and we used $\sigma$=1. Then, we can compute the permittivity as
-%
-\begin{equation}
-\epsilon := \left(1-\rho \right) \epsilon_1 + \rho\epsilon_2
-\end{equation}
-%
-
-We used Equation \eqref{eq:epsilon_gauss} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
-We chose APBS because it provides an easy interface to control dielectric maps, in order to make sure that they agree with the ones imposed in our FEM-BEM coupled approach.
-As $\epsilon_2$ is variable, Equation \eqref{eq:phi_coulomb} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically (MOVE TO METHODS).
-For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, however, the solvent permittivity was set to $\epsilon$=2. 
-Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff [Alexov]. 
-We did not consider a cutoff in our calculations, but this does not affect our validation exercise. 
+We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
+We chose APBS because it provides an easy interface to control dielectric maps, in order to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
 \subsection*{\sffamily \large Convergence and performance for arginine}
 
-Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approaches. We can see that they are both converging to equivalent values, where the finest meshes agree up to the third significant figure.
+Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 1.5\% (0.5 kcal/mol).
 
 Figure \ref{fig:arg_variable} contains performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
-Similar to the case with constant permittivity, although the hybrid approach requires less iterations (are we counting them appropriately? meaning there are external and internal iterations), the total time to solution is less for the standard approach. This means that each iteration of hybrid FEM-BEM is slower than the standard counterpart.
-
 
 \begin{table}
 \centering
@@ -133,18 +104,18 @@ Similar to the case with constant permittivity, although the hybrid approach req
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
     & 2 & -35.688 \\
-Standard    & 4  & -33.304 \\
-FEM-BEM    & 8  & -32.634 \\
+FEM-BEM    & 4  & -33.304 \\
+coupling    & 8  & -32.634 \\
     & 16 & -31.868 \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -29.554\\
-    & 2 & -34.670\\
-Hybrid    & 4  & -33.603 \\
-FEM-BEM    & 8  & -32.822 \\
-    & 16 & -32.072 \\
-\hline
+%    & 2 & -34.670\\
+%Hybrid    & 4  & -33.603 \\
+%FEM-BEM    & 8  & -32.822 \\
+%    & 16 & -32.072 \\
+%\hline
 \end{tabular}
-\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the standard and hybrid FEM-BEM approaches, and APBS. Add performance result?}
+\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh. Add performance result?}
 \label{table:arg_variable}
 \end{table}
 
@@ -155,7 +126,7 @@ FEM-BEM    & 8  & -32.822 \\
 \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_time_11.png}
 \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_setup_time_11.png}
 \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter_11.png}
-\caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using standard and hybrid FEM-BEM coupling. %Can we make this only two plots?
+\caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
 }
 \label{fig:arg_variable}
 \end{figure}
@@ -163,6 +134,4 @@ FEM-BEM    & 8  & -32.822 \\
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
-So far, in all the small structures that we have tested, the standard approach has been more efficient than the hybrid one.
-However, the fact that there are better preconditioning strategies for the hybrid approach indicates that it may become faster for larger test cases, where conditioning of the linear system is usually more important. 
-In this section, we compare both approaches for larger structures.
+So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behavior with larger structures to evaluate its applicability in more realistic settings.
