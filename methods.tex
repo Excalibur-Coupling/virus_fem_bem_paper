@@ -40,7 +40,7 @@ Applying Green's second identity to Equation \eqref{eq:pbe} we get
 %
 \begin{align} \label{eq:volume_potential}
 \phi_{1}(\mathbf{x}_{\Omega_1})+ K_{L}^{\Omega_1}\phi_1 -  V_{L}^{\Omega_1} \lambda_2^1 & = \tfrac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{x}_{\Omega_1} - \mathbf{x}_k|}  \quad \text{on $\Omega_1$,} \nonumber \\
-\phi_{2}(\mathbf{x}_{\Omega_2}) - K_{Y}^{\Omega_2}\phi_2 + V_{Y}^{\Omega_2} \lambda_2& = 0 \quad \text{on $\Omega_2$,}
+\phi_{2}(\mathbf{x}_{\Omega_2}) - K_{Y}^{\Omega_2}\phi_2 + \tfrac{\epsilon_1}{\epsilon_2} V_{Y}^{\Omega_2} \lambda_2& = 0 \quad \text{on $\Omega_2$,}
 \end{align}
 %
 where $\mathbf{x}_\Omega$ is evaluated anywhere in the correspoding domain, except $\Gamma$, and $\phi_1 = \phi_1(\mathbf{x}_\Gamma)$ and $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. For convenience, we call the normal derivative on the interface ({\it ie.} the Neumann trace) $\lambda=\left(\frac{\partial}{\partial \mathbf{n}}  \phi_{\Gamma}  \right)$. $K$ and $V$ are the double- and single-layer potentials for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels
