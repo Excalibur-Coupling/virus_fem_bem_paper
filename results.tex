@@ -1,7 +1,7 @@
-This section presents verification and performance results of the standard and hybrid FEM-BEM coupling schemes, for molecules modeled as cavities with constant and varying permittivity.
+This section presents the verification and performance results of the presented FEM-BEM coupling schemes, for molecules modeled as cavities with constant and varying permittivity.
 With a constant permittivity inside the molecule, we tested convergence against an analytical expression of the solvation energy of a sphere \cite{Kirkwood1934}, and then compared a more realistic geometry (arginine) with a purely BEM implementation.
 We also considered a Gaussian-varying permittivity\cite{grant2001smooth,li2013dielectric} inside the molecular cavity of arginine, and used APBS \cite{BakerETal2001} to verify our results.
-The final tests show the scaling of the standard and hybrid FEM-BEM coupling, as the molecule size grows. 
+The final tests show the scaling of the FEM-BEM coupling, as the molecule size grows. 
 
 All runs were done on XX computer with YY specifications. 
 
@@ -15,9 +15,9 @@ As in these cases there is an analytical solution for $\phi_c$ in Eq. \eqref{eq:
 
 The Kirkwood sphere \cite{Kirkwood1934} is a standard benchmark test for the Poisson-Boltzmann equation in molecular electrostatics. 
 In this case, we considered a spherical cavity of radius $R=2$ \AA, with three charges ($q_1$=1, $q_2$=1, and $q_3$=0.75) placed at $\mathbf{x}_1=(1,0,0)$, $\mathbf{x}_2=(0.7,0.7,0)$, and $\mathbf{x}_3=(-0.5,-0.5,0)$.
-Figure \ref{fig:error_sphere} shows the error convergence of the standard and hybrid FEM-BEM approaches, and a reference BEM implementation, to the analytical solution ($\Delta G_{solv}= -164.3375$ kcal/mol). 
+Figure \ref{fig:error_sphere} shows the error convergence of the FEM-BEM approaches, and a reference BEM implementation, to the analytical solution ($\Delta G_{solv}= -164.3375$ kcal/mol). 
 In these runs, the FEM mesh was generated using Bempp (check?) from a surface discretization with W, X, Y, and Z vertices per \AA$^2$ on the SES, which was also used for the BEM runs. 
-For the hybrid FEM-BEM coupling approach, we used $\tau$=5.
+%For the hybrid FEM-BEM coupling approach, we used $\tau$=5.
 The error in Figure \ref{fig:error_sphere} decays linearly with the surface area, which agrees with the expected convergence for P1 elements, indicating a correct implementation of the numerical scheme. 
 %We can see that the purely BEM implementation outperforms (or not?) FEM-BEM coupling in terms of accuracy for equivalent meshes, and also that the hybrid approach does not (or does?) influence accuracy. 
 
@@ -36,13 +36,13 @@ As a more realistic test, we assessed the performance of the FEM-BEM coupling te
 We generated surface meshes containing W, X, Y, and Z vertices per \AA$^2$ with Nanoshaper.~\cite{decherchi2013general}
 These meshes were inputs to our purely BEM solver, and to create the FEM mesh with pyGAMer,~\cite{lee2020open} which invoked \texttt{tetgen} [citation] with the string \texttt{abcd}.
 
-The solvation energy computed with the three schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Then, Figure \ref{fig:arg_constant_time} compares the time-to-solution, and shows that using only BEM outperforms the coupled FEM-BEM approach.
+The solvation energy computed with the two schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
+Then, Figure \ref{fig:arg_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation.
 
 
 \begin{figure}
 \centering
-   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error_11.png}
+   \includegraphics[width=0.6\linewidth]{Arginine_const_coeff_error_11.png}
 %    \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_error.png}
 \caption{Solvation energy for arginine with a constant permittivity.
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
@@ -52,28 +52,28 @@ Then, Figure \ref{fig:arg_constant_time} compares the time-to-solution, and show
 
 \begin{figure}
 \centering
-%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter.png}
-  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time_11.png}
-  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_setup_time_11.png}
-%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_time.png}
-\caption{Time-to-solution for arginine with a constant permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems). 
+   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter_11.png}
+%  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time_11.png}
+%  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_setup_time_11.png}
+  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_total_time_11.png}
+  \caption{Iteration count (left) and time-to-solution (right) for arginine with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
 %NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
-\label{fig:arg_constant_time}
+\label{fig:arg_constant_time_iter}
 \end{figure}
 
 
-\begin{figure}
-\centering
-%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
-  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter_11.png}
-%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_iter.png}
-%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time.png}
-\caption{Iteration count for arginine with a constant permittivity. %(1) fix title, (2) can we put them in a single plot, (3) hybrid is internal or external iterations? maybe we should present the total count?
-}
-\label{fig:arg_contant_iter}
-\end{figure}
+%\begin{figure}
+%\centering
+%%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
+%  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter_11.png}
+%%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_iter.png}
+%%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time.png}
+%\caption{Iteration count for arginine with a constant permittivity. %(1) fix title, (2) can we put them in a single plot, (3) hybrid is internal or external iterations? maybe we should present the total count?
+%}
+%\label{fig:arg_contant_iter}
+%\end{figure}
 
 
 
