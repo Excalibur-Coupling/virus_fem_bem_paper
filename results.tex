@@ -5,7 +5,22 @@ The final tests show the scaling of the FEM-BEM coupling, as the molecule size g
 
 All runs were done on XX computer with YY specifications. 
 
+\section*{\sffamily \Large Software environment}
+
+For the finite element computations we use the software package FEniCSx while for the boundary element computations we use Bempp-cl together with Exafmm-t. FEniCSx is the successor of the widely used FEniCS finite element library.
+It provides a convenient Python interface, in which problems are described using UFL (Unified Form Language), a convenient domain specific language specifically designed for finite element discretisations of partial differential equations. During assembly the UFL description is transformed into efficient low-level C++ code and just-in-time compiled. Bempp-cl is a Python package that uses low-level OpenCL kernels written in C99 to provide optimised assembly routines. For moderate discretisation sizes up to a few ten thousand elements, the built-in dense assembly routines are highly efficient.
+
+For very large grid sizes the user can enable FMM assembly which internally is handled in Bempp-cl through an interface to the Exafmm-t FMM library. For $N$ surface elements this reduces the memory and computational complexity from $\mathcal{O}(N^2)$ in the dense assembly case to $\mathcal{O}(N)$ in the FMM case, making large boundary element problems tractable on standard workstations.
+
+To couple FEniCSx with Bempp-cl we load a volume mesh with FEniCSx. We then export the corresponding boundary mesh into Bempp-cl and assemble the boundary spaces there. Bempp-cl provides numerical trace operators that can translate from the degree of freedom (dof) representation in FEniCSx to the dof representation in Bempp-cl. The corresponding translation work is handled opaquely and the user only needs to deal with high-level interfaces of FEniCSx operators, Bempp-cl operators, and trace operators. FMM assembly fits automatically into this framework and can be enabled or disabled as simple configuration option.
+
+Docker images containing FEniCSx, Bempp-cl, and Exafmm-t are publicly available (PROVIDE LINK), and all codes used in this sections are simple Jupyter Notebooks that can be reproducibly executed in this provided Docker image.
+
 \section*{\sffamily \Large Results with constant permitivitty}
+
+
+
+
 
 In implicit-solvent models, the molecule is usually considered as a region with constant permittivity, in this case, with $\epsilon_1=4$.
 In the solvent region, we used the permittivity of water ($\epsilon_2$=80) and an inverse of the Debye length of $\kappa=0.125$ \AA$^{-1}$.
