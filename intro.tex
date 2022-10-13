@@ -12,8 +12,13 @@ In particular, the boundary element method (BEM) has proven to be very efficient
 However, BEM is limited to constant material properties in each region, and the linear version of the PBE. 
 Even though these limitations are acceptable in a wide range of applications, there are cases when BEM falls short, for example, if a variable permittivity is required inside the solute \cite{grant2001smooth,li2013dielectric}, or the solute is highly charged such that the linear approximation breaks\cite{FogolariETal1999}.
 
-This article presents a methodology to overcome some of those limitations, by coupling finite and boundary elements methods.
+The present article describes a methodology to overcome some of those limitations, by coupling finite and boundary elements methods.
+This approach brings the best of both worlds: the flexibility of FEM and efficiency of BEM, all in an accurate description of the solute molecule.
 FEM-BEM coupling is a popular technique in the context of mixed linear-nonlinear models,\cite{carstensen1995coupling,aurada2013classical} fracture mechanics,\cite{aour2007coupled} fluid-structure interaction,\cite{estorff1991fem} acoustics,\cite{hiptmair2006stabilized} and electromagnetics.\cite{matsuoka1988calculation,hiptmair2008stabilized,bruckner20123d}
-On the other hand, the PBE has been solved with hybrid numerical methods in the past, for example, coupling finite difference with boundary elements,\cite{boschitsch2004hybrid} to solve the nonlinear PBE in a specific region, and finite elements,\cite{xie2016new,ying2018hybrid} to implement modifications to the PBE model ({\it ie.} the size-modified PBE).
+On the other hand, the PBE has been solved with hybrid numerical methods in the past, for example, by coupling finite difference with boundary elements\cite{boschitsch2004hybrid} or finite elements,\cite{xie2016new,ying2018hybrid} which were mainly used to solve the nonlinear PBE in a specific region, and to implement modifications to the PBE model ({\it ie.} the size-modified PBE).
 To the best of our knowledge, this is the first time finite and boundary elements are combined in this application.
-Our approach brings the best of both worlds: the flexibility of FEM and efficiency of BEM, all in an accurate description of the solute molecule.
+
+Here we prototype this principle with the simplest implementation possible: a Johnson-N\'ed\'elec\cite{johnson1980coupling} coupling, mass-matrix and diagonal preconditioning, and no accceleration algorithms ({\it ie.} fast multipole method) or distributed memory execution. 
+This limits the size of problems we can access currently, however, it sets the basis for future developments that use more elaborate formulations and algorithms that are readily available in the software libraries used in this work, in particular, Bempp-cl and FEniCSx.
+These libraries are designed for ease-of-use through a simple Python interface, making them ideal tools to explore and improve computational efficiency, towards tackling large-scale problems, such as a full viral capsid.\cite{MartinezETal2019,wang2021high}
+We hope this work will inspire research along these lines.

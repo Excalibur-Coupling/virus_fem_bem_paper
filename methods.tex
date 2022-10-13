@@ -35,39 +35,7 @@ A common quantity of interest in implicit solvent models is the solvation free e
 
 The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson-Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,cooper2016pygbe} and more recently, with Bempp-cl.~\cite{search2022towards} 
 
-There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{search2022towards} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better conditioned formulation presented by Lu and co-workers.~\cite{LuETal2006,LuETal2009,debuhr2016dashmm}
-Applying Green's second identity to Equation \eqref{eq:pbe} we get 
-%
-\begin{align} \label{eq:volume_potential}
-\phi_{1}(\mathbf{x}_{\Omega_1})+ K_{L}^{\Omega_1}\phi_1 -  V_{L}^{\Omega_1} \lambda_2^1 & = \tfrac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{x}_{\Omega_1} - \mathbf{x}_k|}  \quad \text{on $\Omega_1$,} \nonumber \\
-\phi_{2}(\mathbf{x}_{\Omega_2}) - K_{Y}^{\Omega_2}\phi_2 + \tfrac{\epsilon_1}{\epsilon_2} V_{Y}^{\Omega_2} \lambda_2& = 0 \quad \text{on $\Omega_2$,}
-\end{align}
-%
-where $\mathbf{x}_\Omega$ is evaluated anywhere in the correspoding domain, except $\Gamma$, and $\phi_1 = \phi_1(\mathbf{x}_\Gamma)$ and $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. For convenience, we call the normal derivative on the interface ({\it ie.} the Neumann trace) $\lambda=\left(\frac{\partial}{\partial \mathbf{n}}  \phi_{\Gamma}  \right)$. $K$ and $V$ are the double- and single-layer potentials for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels
-%
-\begin{align}\label{eq:single_double}
-V^D \varphi (\mathbf{x}) = \oint_\Gamma g_i(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
-K^D \varphi (\mathbf{x}) = \oint_\Gamma \frac{\partial g_i}{\partial\mathbf{n}'}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
-\end{align}
-%
-where $D \in \{\Omega_1, \Omega_2, \Gamma\}$, $i \in \{L,Y\}$, $\varphi(\mathbf{x})$ can be any distribution over $\Gamma$, and 
-%
-\begin{align}\label{eq:green_func}
-g_L(\mathbf{x},\mathbf{x}')=\frac{1}{4\pi|\mathbf{x}-\mathbf{x}'|} \nonumber \\
-g_Y(\mathbf{x},\mathbf{x}')=\frac{e^{-\kappa|\mathbf{x}-\mathbf{x}'|}}{4\pi|\mathbf{x}-\mathbf{x}'|}
-\end{align}
-%
-are the free-space Green's function of the Laplace and linearized Poisson-Boltzmann equations, respectively. 
-
-If we take the limit of Eq. \eqref{eq:volume_potential} as $\mathbf{x}_{\Omega}$ approaches $\Gamma$, we get
-%
-\begin{align} \label{eq:direct}
-\tfrac{\phi_1}{2}+ K_{L}^{\Gamma}\phi_1 -  V_{L}^{\Gamma} \lambda_2^1 & = \tfrac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{x}_{\Gamma} - \mathbf{x}_k|} \nonumber \\
-\tfrac{\phi_2}{2} - K_{Y}^{\Gamma}\phi_2 +  \tfrac{\epsilon_1}{\epsilon_2} V_{Y}^{\Gamma} \lambda_2 & = 0
-\end{align}
-%
-The {\it direct} formulation\cite{YoonLenhoff1990} couples the two expressions of Eq. \eqref{eq:direct} on $\Gamma$, considering the interface conditions. Even though this formulation is poorly conditioned with respect to the mesh size, it can still model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,MartinezETal2019,wang2021high} 
-The formulation presented by Lu\cite{LuETal2006} takes the normal derivative of \eqref{eq:direct} to couple both $\phi$ and $\partial\phi/\partial\mathbf{n}$ as
+There are several possible boundary integral formulations of Equation \eqref{eq:pbe}.~\cite{search2022towards} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
 %
 \begin{align}\label{eq:lu}
     & \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}
@@ -75,15 +43,73 @@ The formulation presented by Lu\cite{LuETal2006} takes the normal derivative of 
     &\tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_2 +  \tfrac{\lambda_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right)
 \end{align}
 %
-The two new integral operators that appear are defined as 
+In Equation \eqref{eq:lu}, $\phi_1 = \phi_1(\mathbf{x}_\Gamma)$ and $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. For convenience, we call the normal derivative on the interface ({\it ie.} the Neumann trace) $\lambda=\left(\frac{\partial}{\partial \mathbf{n}}  \phi_{\Gamma}  \right)$. $V$, $K$, $K^{\prime}$, and $W$ are the single-layer, double-layer, adjoint double-layer, and hypersingular operators for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels. These are defined as
 %
-\begin{align}
-\label{eq:adj_hyp}
-K^{\prime\Gamma}_i\varphi (\mathbf{x}) = \oint_\Gamma \frac{g_i}{\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
-W^\Gamma_i\varphi (\mathbf{x}) = - \oint_\Gamma \frac{\partial^2 g_i}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'
+\begin{align}\label{eq:single_double}
+V_i^\Gamma \varphi (\mathbf{x}) &= \oint_\Gamma g_i(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
+K_i^\Gamma \varphi (\mathbf{x}) &= \oint_\Gamma \frac{\partial g_i}{\partial\mathbf{n}'}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
+K^{\prime\Gamma}_i\varphi (\mathbf{x}) &= \oint_\Gamma \frac{g_i}{\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
+W^\Gamma_i\varphi (\mathbf{x}) &= - \oint_\Gamma \frac{\partial^2 g_i}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'
 \end{align}
-where $i \in \{L,Y\}$, 
-and are called the {\it  adjoint double layer} and {\it hypersingular} operators, respectively. Note that the potential in Eq. \eqref{eq:lu} is evaluated on the exterior. 
+%
+where $i \in \{L,Y\}$, $\varphi(\mathbf{x})$ can be any distribution over $\Gamma$, and
+%
+\begin{align}\label{eq:green_func}
+g_L(\mathbf{x},\mathbf{x}')=\frac{1}{4\pi|\mathbf{x}-\mathbf{x}'|} \nonumber \\
+g_Y(\mathbf{x},\mathbf{x}')=\frac{e^{-\kappa|\mathbf{x}-\mathbf{x}'|}}{4\pi|\mathbf{x}-\mathbf{x}'|}
+\end{align}
+%
+are the corresponding free-space Green's functions.
+
+%Applying Green's second identity to Equation \eqref{eq:pbe} we get 
+%
+%\begin{align} \label{eq:volume_potential}
+%\phi_{1}(\mathbf{x}_{\Omega_1})+ K_{L}^{\Omega_1}\phi_1 -  V_{L}^{\Omega_1} \lambda_2^1 & = \tfrac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{x}_{\Omega_1} - \mathbf{x}_k|}  \quad \text{on $\Omega_1$,} \nonumber \\
+%\phi_{2}(\mathbf{x}_{\Omega_2}) - K_{Y}^{\Omega_2}\phi_2 + \tfrac{\epsilon_1}{\epsilon_2} V_{Y}^{\Omega_2} \lambda_2& = 0 \quad \text{on $\Omega_2$,}
+%\end{align}
+%
+%where $\mathbf{x}_\Omega$ is evaluated anywhere in the correspoding domain, except $\Gamma$, and $\phi_1 = \phi_1(\mathbf{x}_\Gamma)$ and $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. For convenience, we call the normal derivative on the interface ({\it ie.} the Neumann trace) $\lambda=\left(\frac{\partial}{\partial \mathbf{n}}  \phi_{\Gamma}  \right)$. $K$ and $V$ are the double- and single-layer potentials for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels
+%
+%\begin{align}\label{eq:single_double}
+%V^D \varphi (\mathbf{x}) = \oint_\Gamma g_i(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
+%K^D \varphi (\mathbf{x}) = \oint_\Gamma \frac{\partial g_i}{\partial\mathbf{n}'}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
+%\end{align}
+%
+%where $D \in \{\Omega_1, \Omega_2, \Gamma\}$, $i \in \{L,Y\}$, $\varphi(\mathbf{x})$ can be any distribution over $\Gamma$, and 
+%
+%\begin{align}\label{eq:green_func}
+%g_L(\mathbf{x},\mathbf{x}')=\frac{1}{4\pi|\mathbf{x}-\mathbf{x}'|} \nonumber \\
+%g_Y(\mathbf{x},\mathbf{x}')=\frac{e^{-\kappa|\mathbf{x}-\mathbf{x}'|}}{4\pi|\mathbf{x}-\mathbf{x}'|}
+%\end{align}
+%
+%are the free-space Green's function of the Laplace and linearized Poisson-Boltzmann equations, respectively. 
+
+%If we take the limit of Eq. \eqref{eq:volume_potential} as $\mathbf{x}_{\Omega}$ approaches $\Gamma$, we get
+%
+%\begin{align} \label{eq:direct}
+%\tfrac{\phi_1}{2}+ K_{L}^{\Gamma}\phi_1 -  V_{L}^{\Gamma} \lambda_2^1 & = \tfrac{1}{\epsilon_1} \sum_{k=0}^{N_q}  \frac{q_k}{4\pi|\mathbf{x}_{\Gamma} - \mathbf{x}_k|} \nonumber \\
+%\tfrac{\phi_2}{2} - K_{Y}^{\Gamma}\phi_2 +  \tfrac{\epsilon_1}{\epsilon_2} V_{Y}^{\Gamma} \lambda_2 & = 0
+%\end{align}
+%
+%The {\it direct} formulation\cite{YoonLenhoff1990} couples the two expressions of Eq. \eqref{eq:direct} on $\Gamma$, considering the interface conditions. Even though this formulation is poorly conditioned with respect to the mesh size, it can still model large systems when it is preconditioned appropriately.\cite{AltmanBardhanWhiteTidor09,MartinezETal2019,wang2021high} 
+%The formulation presented by Lu\cite{LuETal2006} takes the normal derivative of \eqref{eq:direct} to couple both $\phi$ and $\partial\phi/\partial\mathbf{n}$ as
+%
+%\begin{align}\label{eq:lu}
+%    & \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}
+%     \nonumber \\
+%    &\tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_2 +  \tfrac{\lambda_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right)
+%\end{align}
+%
+%The two new integral operators that appear are defined as 
+%
+%\begin{align}
+%\label{eq:adj_hyp}
+%K^{\prime\Gamma}_i\varphi (\mathbf{x}) = \oint_\Gamma \frac{g_i}{\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
+%W^\Gamma_i\varphi (\mathbf{x}) = - \oint_\Gamma \frac{\partial^2 g_i}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'
+%\end{align}
+%where $i \in \{L,Y\}$, 
+%and are called the {\it  adjoint double layer} and {\it hypersingular} operators, respectively. Note that the potential in Eq. \eqref{eq:lu} is evaluated on the exterior. 
+
 In weak form, Eq. \eqref{eq:lu} becomes
 %
 \begin{align}\label{eq:lu_disc}
@@ -129,13 +155,14 @@ Using the above definition the discrete problem~\eqref{eq:fem_bem_disctrete} can
 \end{align*}
 %
 
-Having computed the electrostatic potential with Eq. \eqref{eq:lu_disc}, we obtain the reaction potential ($\phi_r$) in Eq. \eqref{eq:dG} by subtracting out the Coulombic component out of $\phi_1$ in Eq. \eqref{eq:volume_potential}. This gives
+Having computed the electrostatic potential with Eq. \eqref{eq:lu_disc}, we obtain the reaction potential ($\phi_r$) in Eq. \eqref{eq:dG} by subtracting out the Coulombic component out of $\phi_1$. This gives\cite{CooperBardhanBarba2014}
 %
 \begin{align} \label{eq:phi_reac}
-\phi_{r} = - K_{L}^{\Omega_1}(\phi_1) + V_{L}^{\Omega_1} \left(  \lambda_1  \right),
+\phi_{r}(\mathbf{r}) = - K_{L}^{\mathbf{r}}(\phi_1) + V_{L}^{\mathbf{r}} \left(  \lambda_1  \right),
 \end{align}
 %
-which is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
+where $\mathbf{r}\in\Omega_1$.
+This is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
 
 \subsection*{\sffamily \normalsize FEM-BEM coupling}
 
