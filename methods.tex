@@ -178,31 +178,7 @@ BEM is a popular alternative to solve the Poisson-Boltzmann equation numerically
 For such case, a finite element method (FEM) is more suitable.
 
 The coupling of finite element (FEM) and boundary element (BEM) methods is a widely used approach to solve multi-physical problems on unbounded domains [citation?], as it takes advantage of both methods. On one hand, the BEM satifies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces, hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
-    
-    
-{\sffamily \small Modeling the solute with a Gaussian-based variable permittivity}\\
-
-In contrast to a purely BEM approach, FEM-BEM coupling gives flexibility to consider space-varying field parameters. 
-A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom,\cite{grant2001smooth} which has shown enhanced accuracy in some applications, like pKa calculations.\cite{li2013dielectric}
-In this setting, we define a density function $\rho$ depending on position $r$ as
-%
-\begin{equation}
-\rho(r) := \prod_i \left(1 - \exp{\left(\frac{\|r-\mathbf{x}_i\|}{\sigma^2 R_i^2}\right)}\right)
-\end{equation}
-%
-where the product runs over all the atoms of the solute, $R_i$ is the van der Waals radius of atom i, and we used $\sigma$=1. Then, we can compute the permittivity as
-%
-\begin{equation}\label{eq:varying_eps}
-\epsilon := \left(1-\rho \right) \epsilon_1 + \rho\epsilon_2
-\end{equation}
-
-As $\epsilon_2$ is variable, Equation \eqref{eq:phic} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically.
-For vacuum calculations, we considered the same distribution of $\epsilon_2$ inside the molecule as in the solvated case, but the solvent permittivity was set to $\epsilon$=2. 
-Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
-
-{\sffamily \small The Johnson-N\'ed\'elec FEM-BEM coupling for molecular electrostatics}\\
-
-   We modeled the electrostatic component of solvation of a solute with a Gaussian-varying permittivit (Eq. \eqref{eq:varying_eps}) with a finite element discretisation in the internal domain ($\Omega_1$), and boundary elements for external domain ($\Omega_2$). We used the Johnson-N\'ed\'elec formulation [citation needed], which is the simplest form of FEM-BEM coupling, and we detail it next.
+Here, we used the Johnson-N\'ed\'elec formulation,\cite{johnson1980coupling} which is the simplest form of FEM-BEM coupling, and we detail it next.
 
    We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$, we have
 % 

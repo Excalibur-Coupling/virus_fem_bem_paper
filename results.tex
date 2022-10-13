@@ -96,6 +96,27 @@ Then, Figure \ref{fig:arg_constant_time_iter} compares the iteration count and t
 
 \section*{\sffamily \Large Results with variable permittivity}
 
+\subsection*{\sffamily \large Motivation: modeling the solute with a Gaussian-based variable permittivity}
+
+In contrast to a purely BEM approach, FEM-BEM coupling gives flexibility to consider space-varying field parameters. 
+A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom,\cite{grant2001smooth} which has shown enhanced accuracy in some applications, like pKa calculations.\cite{li2013dielectric}
+In this setting, we define a density function $\rho$ depending on position $r$ as
+%
+\begin{equation}
+\rho(r) := \prod_i \left(1 - \exp{\left(\frac{\|r-\mathbf{x}_i\|}{\sigma^2 R_i^2}\right)}\right)
+\end{equation}
+%
+where the product runs over all the atoms of the solute, $R_i$ is the van der Waals radius of atom i, and we used $\sigma$=1. Then, we can compute the permittivity as
+%
+\begin{equation}\label{eq:varying_eps}
+\epsilon := \left(1-\rho \right) \epsilon_1 + \rho\epsilon_2
+\end{equation}
+
+As $\epsilon_2$ is variable, Equation \eqref{eq:phic} does not have an analytical solution, and the electrostatic potential in vacuum state has to be computed numerically.
+For vacuum calculations, we considered the same distribution of $\epsilon_2$ inside the molecule as in the solvated case, but the solvent permittivity was set to $\epsilon$=2. 
+Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
+
+
 We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
 We chose APBS because it provides an easy interface to control dielectric maps, in order to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
