@@ -26,10 +26,11 @@ As in these cases there is an analytical solution for $\phi_c$ in Eq. \eqref{eq:
 
 The Kirkwood sphere \cite{Kirkwood1934} is a standard benchmark test for the Poisson-Boltzmann equation in molecular electrostatics. 
 In this case, we considered a spherical cavity of radius $R=2$ \AA, with three charges ($q_1$=1, $q_2$=1, and $q_3$=0.75) placed at $\mathbf{x}_1=(1,0,0)$, $\mathbf{x}_2=(0.7,0.7,0)$, and $\mathbf{x}_3=(-0.5,-0.5,0)$.
-Figure \ref{fig:error_sphere} shows the error convergence of the FEM-BEM approaches, and a reference BEM implementation, to the analytical solution ($\Delta G_{solv}= -164.3375$ kcal/mol). 
-In these runs, the FEM mesh was generated using GMSH~\cite{geuzaine2009gmsh}. 
+Figure \ref{fig:error_sphere} shows the error convergence of the FEM-BEM approaches, and a reference BEM implementation, to the analytical solution ($\Delta G_{solv}= -336.0396$ kcal/mol). 
+In these runs, the FEM mesh was generated using GMSH~\cite{geuzaine2009gmsh} 
 %Bempp (check?) from a surface discretization 
-with 1, 2, 4, and 8 vertices per \AA$^2$ on the SES, the surface mesh of this volume one was also used for the BEM runs. 
+with %1, 2, 4, and 8 
+2, 6, 21 and 83 vertices per \AA$^2$ on the SES, the surface mesh of this volume one was also used for the BEM runs. 
 %For the hybrid FEM-BEM coupling approach, we used $\tau$=5.
 The error in Figure \ref{fig:error_sphere} decays linearly with the surface area, which agrees with the expected convergence for P1 elements, indicating a correct implementation of the numerical scheme. 
 %We can see that the purely BEM implementation outperforms (or not?) FEM-BEM coupling in terms of accuracy for equivalent meshes, and also that the hybrid approach does not (or does?) influence accuracy. 
@@ -43,19 +44,19 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 
 \subsection*{\sffamily \large Performance with arginine}
 
-As a more realistic test, we assessed the performance of the FEM-BEM coupling technique against a purely BEM implementation for arginine (the structure of arginine taken from the protein data bank \cite{bank} {\color{red} We are using different ARG!}). 
+As a more realistic test, we assessed the performance of the FEM-BEM coupling technique against a purely BEM implementation for arginine (the structure of arginine taken from the protein data bank \cite{bank}). 
 We generated surface meshes containing W, X, Y, and Z vertices per \AA$^2$ with Nanoshaper.~\cite{decherchi2013general}
 These meshes were inputs to our purely BEM solver, and to create the FEM mesh with pyGAMer,~\cite{lee2020open} which invoked \texttt{tetgen} [citation] with the string \texttt{abcd}.
 
 The solvation energy computed with the two schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Then, Figure \ref{fig:arg_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation.
+Then, Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation.
 
 
 \begin{figure}
 \centering
    \includegraphics[width=0.47\linewidth]{DolfinX_Arginine2_const_coeff_error.png}
-   \includegraphics[width=0.47\linewidth]{DolfinX_Arginine_const_coeff_error_11.png}
-\caption{Solvation energy for arginine with a constant permittivity. (left - Arginine2 and right - Arginine)
+%   \includegraphics[width=0.47\linewidth]{DolfinX_Arginine_const_coeff_error_11.png}
+\caption{Solvation energy for arginine with a constant permittivity. %(left - Arginine2 and right - Arginine)
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
 \label{fig:arg_constant_energy}
@@ -71,29 +72,29 @@ Then, Figure \ref{fig:arg_constant_time_iter} compares the iteration count and t
 %%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_time_11.png}
 %%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_setup_time_11.png}
 %  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_total_time_11.png}
-  \caption{Iteration count (left) and time-to-solution (right) for Arginine2 with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
+  \caption{Iteration count (left) and time-to-solution (right) for Arginine with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
 %NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
 }
 \label{fig:arg2_constant_time_iter}
 \end{figure}
 
-\begin{figure}
-\centering
-%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_iter.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_time.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_setup_time.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_total_time.png}
-   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_iter_11.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_time_11.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_setup_time_11.png}
-  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_total_time_11.png}
-  \caption{Iteration count (left) and time-to-solution (right) for Arginine with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
-%NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
-%maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
-}
-\label{fig:arg_constant_time_iter}
-\end{figure}
+%\begin{figure}
+%\centering
+%%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_iter.png}
+%%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_time.png}
+%%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_setup_time.png}
+%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_total_time.png}
+%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_iter_11.png}
+%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_time_11.png}
+%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_setup_time_11.png}
+%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_total_time_11.png}
+%  \caption{Iteration count (left) and time-to-solution (right) for Arginine with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
+%%NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
+%%maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
+%}
+%\label{fig:arg_constant_time_iter}
+%\end{figure}
 
 
 %\begin{figure}
@@ -137,9 +138,9 @@ We chose APBS because it provides an easy interface to control dielectric maps, 
 
 \subsection*{\sffamily \large Convergence and performance for arginine}
 
-Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 1.5\% (0.5 kcal/mol).
+Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 1.5\% {\color{red} (shouldn't be 0.5\%?)} (0.5 kcal/mol).
 
-Figure \ref{fig:arg_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
+Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
 
 \begin{table}
 \centering
@@ -171,8 +172,20 @@ coupling    & 8.57  & -109.658 \\
 %\hline
 \end{tabular}
 \caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh. Add performance result?}
-\label{table:arg_variable}
+\label{table:arg2_variable}
 \end{table}
+
+%\begin{figure}
+%\centering
+%% \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter.png}
+%% \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_time.png}
+%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_time_11.png}
+%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_setup_time_11.png}
+%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter_11.png}
+%\caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
+%}
+%\label{fig:arg_variable}
+%\end{figure}
 
 \begin{figure}
 \centering
@@ -183,10 +196,28 @@ coupling    & 8.57  & -109.658 \\
 \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter_11.png}
 \caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
 }
-\label{fig:arg_variable}
+\label{fig:arg2_variable}
 \end{figure}
 
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
-So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behavior with larger structures to evaluate its applicability in more realistic settings.
+So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behaviour with larger structures to evaluate its applicability in more realistic settings.
+
+
+\begin{table}
+\centering
+\begin{tabular}{c|c|c|c|c|c|c}
+Molecule & Mesh size  & $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
+& vert/\AA$^2$ &  kcal/mol & & sec & sec & sec \\
+\hline
+ 1pgb &  & -300.888 & 826 & 82 & 547 & 629  \\
+ 1lyz &  & -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
+ 1lyz gs3 & & -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
+ 1uxu &  & -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
+ 1igt &  &  -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
+ \hline
+\end{tabular}
+\caption{Large tests' results}
+\label{table:large_variable}
+\end{table}
