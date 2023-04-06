@@ -1,6 +1,6 @@
 \subsection*{\sffamily \large The implicit solvent model}
 
-The implicit solvent model can be described mathematically as a coupled system of partial differential equations, where the Poisson-Boltzmann governs in the solvent region ($\Omega_1$ in Figure XX), and the Poisson equation in the solute region ($\Omega_2$ in Figure XX). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous. 
+The implicit solvent model\cite{RouxSimonson1999,DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson-Boltzmann governs in the solvent region ($\Omega_1$ in Figure XX), and the Poisson equation in the solute region ($\Omega_2$ in Figure XX). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous. 
 %
 \begin{align}\label{eq:pbe}
 \nabla^2\phi_1(\mathbf{x}) &= \tfrac{1}{\epsilon_1}\sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
@@ -20,8 +20,7 @@ The electrostatic potential in $\Omega_1$ can be further decomposed into singula
 Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_r$, also known as reaction potential, is originated by the polarization of the solvent and reorganization of the free ions. 
 Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$, however, this is not the general case.
 
-Regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods.
-However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permitivitties.
+Regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permitivitties in the solute.\cite{wang2022regularization} However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permitivitties, beyond super-Gaussian descriptions.
 
 A common quantity of interest in implicit solvent models is the solvation free energy, which the change in Gibbs free energy as the molecule moves from vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
 %
