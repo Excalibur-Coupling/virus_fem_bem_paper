@@ -3,7 +3,7 @@ With a constant permittivity inside the molecule, we tested convergence against 
 We also considered a Gaussian-varying permittivity\cite{grant2001smooth,li2013dielectric} inside the molecular cavity of arginine, and used APBS \cite{BakerETal2001} to verify our results.
 The final tests show the scaling of the FEM-BEM coupling, as the molecule size grows. 
 
-All runs were done on XX computer with YY specifications. 
+All runs were done on Lenovo ThinkStation P620 with AMD Ryzen ThreadRipper PRO 3975WX 32-core 3.5 GHz and 128 GB RAM. 
 
 \section*{\sffamily \Large Software environment}
 
@@ -146,25 +146,25 @@ Figure \ref{fig:arg2_variable} contains the performance results of this test cas
 
 \begin{table}
 \centering
-\begin{tabular}{c|c|c}
-&Mesh size & $\Delta G_{solv}$\\
-&\AA       &  kcal/mol \\
+\begin{tabular}{c|c|c|c}
+&Mesh size  & Grid points? & $\Delta G_{solv}$\\
+&\AA       & &  kcal/mol \\
 \hline
-\multirow{4}{*}{APBS}& 0.52$\times$0.52$\times$0.52 & -107.6186 \\ 
-& 0.39$\times$0.39$\times$0.39 & -107.8752\\ 
-&0.26$\times$0.26$\times$0.26 & -108.3378\\ 
-&0.195$\times$0.195$\times$0.195 & -108.5837\\ 
-&0.098$\times$0.098$\times$0.098 & -108.8844\\ 
+\multirow{4}{*}{APBS}& 0.52$\times$0.52$\times$0.52 &  & -107.6186 \\ 
+& 0.39$\times$0.39$\times$0.39 & & -107.8752\\ 
+&0.26$\times$0.26$\times$0.26 & & -108.3378\\ 
+&0.195$\times$0.195$\times$0.195 & & -108.5837\\ 
+&0.098$\times$0.098$\times$0.098 & & -108.8844\\ 
 \hline
-&Mesh dens. & \\
-&vert/\AA$^2$ & \\
+&Mesh dens. & DOFs & $\Delta G_{solv}$\\
+&vert/\AA$^2$   &  &  kcal/mol \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
-    & 4.1 & -109.933 \\
-FEM-BEM    & 6.7  & -110.238 \\
-coupling    & 8.57  & -109.658 \\
-    & 17 & -109.368 \\
-    & 24.5 & -109.286 \\
+    & 4.1 & 3 491 & -109.933 \\
+FEM-BEM    & 6.7  & 5 787 & -110.238 \\
+coupling    & 8.57  & 8 844 & -109.658 \\
+    & 17 & 19 911 & -109.368 \\
+    & 24.5 & 32 302 & -109.286 \\
 \hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -29.554\\
 %    & 2 & -34.670\\
@@ -209,17 +209,34 @@ So far, we have only tested the FEM-BEM coupled approach with small structures. 
 
 \begin{table}
 \centering
-\begin{tabular}{c|c|c|c|c|c|c}
-Molecule & Mesh size  & $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
-& vert/\AA$^2$ &  kcal/mol & & sec & sec & sec \\
+\resizebox{\textwidth}{!}{\begin{tabular}{c|c|c|c|c|c|c|c}
+Molecule & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
+& DOFs & DOFs &  kcal/mol & & sec & sec & sec \\
 \hline
- 1pgb &  & -300.888 & 826 & 82 & 547 & 629  \\
- 1lyz &  & -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
- 1lyz gs3 & & -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
- 1uxu &  & -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
- 1igt &  &  -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
+ 1pgb  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 629  \\
+ 1lyz  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
+ 1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
+ 1uxu & 263 181 & 81 258 &  -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
+ 1igt & 597 575 & 187 712 &   -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
  \hline
-\end{tabular}
+\end{tabular}}
 \caption{Large tests' results}
 \label{table:large_variable}
 \end{table}
+%
+%\begin{table}
+%\centering
+%\begin{tabular}{c|c|c|c|c|c|c|c|c}
+%Molecule & Mesh size  & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
+%& vert/\AA$^2$ & DOFs & DOFs &  kcal/mol & & sec & sec & sec \\
+%\hline
+% 1pgb &  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 629  \\
+% 1lyz &  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
+% 1lyz gs3 &  & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
+% 1uxu &  & 263 181 & 81 258 &  -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
+% 1igt &  & 597 575 & 187 712 &   -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
+% \hline
+%\end{tabular}
+%\caption{Large tests' results}
+%\label{table:large_variable}
+%\end{table}
