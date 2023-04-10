@@ -140,21 +140,21 @@ We chose APBS because it provides an easy interface to control dielectric maps, 
 
 \subsection*{\sffamily \large Convergence and performance for arginine}
 
-Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 1.5\% {\color{red} (shouldn't be 0.5\%?)} (0.5 kcal/mol).
+Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 0.5\% (0.5 kcal/mol).
 
 Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
 
 \begin{table}
 \centering
 \begin{tabular}{c|c|c|c}
-&Mesh size  & Grid points? & $\Delta G_{solv}$\\
+&Mesh size  & Grid points & $\Delta G_{solv}$\\
 &\AA       & &  kcal/mol \\
 \hline
-\multirow{4}{*}{APBS}& 0.52$\times$0.52$\times$0.52 &  & -107.6186 \\ 
-& 0.39$\times$0.39$\times$0.39 & & -107.8752\\ 
-&0.26$\times$0.26$\times$0.26 & & -108.3378\\ 
-&0.195$\times$0.195$\times$0.195 & & -108.5837\\ 
-&0.098$\times$0.098$\times$0.098 & & -108.8844\\ 
+\multirow{4}{*}{APBS}& 0.52$\times$0.52$\times$0.52 & 97$\times$97$\times$97 & -107.6186 \\ 
+& 0.39$\times$0.39$\times$0.39 & 129$\times$129$\times$129 & -107.8752\\ 
+&0.26$\times$0.26$\times$0.26 & 193$\times$193$\times$193& -108.3378\\ 
+&0.195$\times$0.195$\times$0.195 & 257$\times$257$\times$257& -108.5837\\ 
+&0.098$\times$0.098$\times$0.098 & 513$\times$513$\times$513& -108.8844\\ 
 \hline
 &Mesh dens. & DOFs & $\Delta G_{solv}$\\
 &vert/\AA$^2$   &  &  kcal/mol \\
@@ -173,7 +173,7 @@ coupling    & 8.57  & 8 844 & -109.658 \\
 %    & 16 & -32.072 \\
 %\hline
 \end{tabular}
-\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh. Add performance result?}
+\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh.}
 \label{table:arg2_variable}
 \end{table}
 
