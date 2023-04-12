@@ -204,23 +204,26 @@ coupling    & 8.57  & 8 844 & -109.658 \\
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
-So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behaviour with larger structures to evaluate its applicability in more realistic settings.
+So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behaviour with larger structures to evaluate its applicability in more realistic settings, and  in test cases where BEM-BEM coupling is not an alternative. Using the same Gaussian permittivity field inside the molecule, we computed the solvation free energy of protein G B1 (955 atoms, PDB code 1pgb), lysozyme (1960 atoms, PDB code 1lyz), the barnase-barstar complex (9464 atoms, PDB code 1x1u), and immunoglobulin G (20148 atoms, PDB code 1igt). All structures were parameterized with the Amber\cite{Swanson05} force field using pdb2pqr.\cite{Dolinsky04} The surface was meshed with Nanoshaper\cite{decherchi2013general} considering a grid scale of 1.5, and then used to mesh the solute region with pyGAMer\cite{lee2020open} and TetGen\cite{hang2015tetgen} with a radius-edge ratio of 1.0. Solvation free energy and timings for these runs are presented in Table \ref{table:large_variable}, showing that our FEM-BEM coupling method can reach medium-to-large sized proteins on a workstation. 
 
+Table \ref{table:large_variable} shows that the iteration count increases with the problem size. This is expected for Johnson-N\'ed\'elec, which is the simplest coupling strategy. To isolate the effect of the increased iterations in the analysis, we separate timings in ``setup'' and ``solving'' time, where the ``setup'' time is independent of the number of iterations, and the ``solving'' time corresponds to the time spent in the GMRES solver. Then, the time-per-iteration in table \ref{table:large_variable} only considers the ``solving'' time. Looking at the increase in degrees of freedom, which scales equivalently for FEM and BEM, the ``setup'' time scales slightly worse than $\mathcal{O}(N^2)$, mainly due to the dense nature of the BEM portion of the matrix \textcolor{red}{(check if not using fmm)}. On the other hand, the ``solving time per iteration'' scales closer to $\mathcal{O}(N)$. This is an indication that the high ``solving time'' is mainly due to the increase in iteration count, and having better conditioned coupling methods, such as the so-called hybrid approach,\cite{betcke2022hybrid} can have a large impact in the time to solution.
+
+Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up most of the available RAM memory (\textcolor{red}{check and rewrite}). If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require to improve not only in the conditioning of the system, but also in the choice of fast algorithms\cite{Wantfmm,Betrckefmm} and parallelization.
 
 \begin{table}
 \centering
-\resizebox{\textwidth}{!}{\begin{tabular}{c|c|c|c|c|c|c|c}
-Molecule & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
-& DOFs & DOFs &  kcal/mol & & sec & sec & sec \\
+\resizebox{\textwidth}{!}{\begin{tabular}{c|c|c|c|c|c|c|c|c}
+Molecule & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Solv. time per & Total Time \\
+& DOFs & DOFs &  kcal/mol & & [sec] & [sec] & iter. [sec] & [sec] \\
 \hline
- 1pgb  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 629  \\
- 1lyz  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
- 1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
- 1uxu & 263 181 & 81 258 &  -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
- 1igt & 597 575 & 187 712 &   -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
+ 1pgb  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 0.6 & 6 629  \\
+ 1lyz  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1.2 & 1 970  \\
+ %1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 3.6 & 12 590   \\
+ 1x1u & 263 181 & 81 258 \textcolor{red}{82360} &  -1 984.468 & 4 167 & 8 240 & 16 300 & 3.91 & 24 540  \\
+ 1igt & 597 575 & 187 712 \textcolor{red}{189960} &   -3 294.230 & 8 361 & 41 200 & 64 200 & 7.67  &  105 400   \\
  \hline
 \end{tabular}}
-\caption{Large tests' results}
+\caption{Results for larger structures with a variable permitivitty.}
 \label{table:large_variable}
 \end{table}
 %
