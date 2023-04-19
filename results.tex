@@ -135,10 +135,11 @@ For vacuum calculations, we considered the same distribution of $\epsilon$ insid
 Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
 
 
-We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
-We chose APBS because it provides an easy interface to control dielectric maps, in order to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
 \subsection*{\sffamily \large Convergence for arginine with APBS}
+
+We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
+We chose APBS because it provides an easy interface to control dielectric maps, in order to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
 Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 0.5\% (0.5 kcal/mol). The coarsest meshes used in both cases are within the recommended densities for accurate solvation energy simulations with constant permittivity. For example, a finite difference mesh with $h$=0.5 \AA~ or less is recommended for binding energy calculations\cite{sorensen2015comprehensive} (the result of substracting two solvation energies), and a similar study with BEM\cite{CooperBardhanBarba2014} showed that a mesh with 2 vertices per \AA$^2$ gives acceptable results when computing binding and solvation energies. We see a jump in the solvation energy for the FEM-BEM results going from 4.1 to 6.7 vertices per \AA$^2$, but later the energy monotonically decreases, converging to a solution. This is an indication that mesh requirements for variable permitivities may be tighter than with a constant permittivity, even though the jump in dielectric constant accross the molecular surface is usually smaller. 
 
