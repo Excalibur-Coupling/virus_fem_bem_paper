@@ -261,7 +261,7 @@ and vector associated with the corresponding linear form
 \vec{f}_{\beta} := \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  \phi_1^{\beta} \right)_{\Omega_1}.
 \end{equation*}
 Using the above definition the discrete problem in Eq.~\eqref{eq:standard_fem_bem} can be written in the following matrix form
-\begin{align*}
+\begin{align}\label{eq:fembem_matrix}
 \begin{bmatrix}
 \epsilon_1 A &  - \epsilon_1 M^T \\  
 \left(\tfrac12 I + K \right) \gamma &  \tfrac{\epsilon_1}{\epsilon_2} V 
@@ -275,5 +275,5 @@ Using the above definition the discrete problem in Eq.~\eqref{eq:standard_fem_be
 \vec{f} \\  
 0
 \end{bmatrix}.
-\end{align*}
+\end{align}
 

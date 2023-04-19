@@ -3,7 +3,7 @@ With a constant permittivity inside the molecule, we tested convergence against 
 We also considered a Gaussian-varying permittivity\cite{grant2001smooth,li2013dielectric} inside the molecular cavity of arginine, and used APBS \cite{BakerETal2001} to verify our results.
 The final tests show the scaling of the FEM-BEM coupling, as the molecule size grows. 
 
-All runs were done on Lenovo ThinkStation P620 with AMD Ryzen ThreadRipper PRO 3975WX 32-core 3.5 GHz and 128 GB RAM. 
+All runs were done on a Lenovo ThinkStation P620 with AMD Ryzen ThreadRipper PRO 3975WX (32-core and 3.5 GHz) and 128 GB RAM. 
 
 \section*{\sffamily \Large Software environment}
 
@@ -20,7 +20,7 @@ Docker images containing FEniCSx, Bempp-cl, and Exafmm-t are publicly available 
 
 In implicit-solvent models, the molecule is usually considered as a region with constant permittivity, in this case, with $\epsilon_1=2$.
 In the solvent region, we used the permittivity of water ($\epsilon_2$=80) and an inverse of the Debye length of $\kappa=0.125$ \AA$^{-1}$.
-As in these cases there is an analytical solution for $\phi_c$ in Eq. \eqref{eq:phic}, we compute $\phi_r$ with Eq. \eqref{eq:phi_reac} in both BEM-BEM and FEM-BEM coupling approaches. Then, for FEM-BEM, the integral over $\Gamma$ in Eq. \eqref{eq:phi_reac} corresponds to the trace of the solution vector.
+As in these cases there is an analytical solution for $\phi_c$ in Eq. \eqref{eq:phic}, we compute $\phi_r$ with Eq. \eqref{eq:phi_reac} in both BEM-BEM and FEM-BEM coupling approaches. Then, for FEM-BEM, the integral over $\Gamma$ in Eq. \eqref{eq:phi_reac} corresponds to the trace of the solution vector from Eq. \eqref{eq:fembem_matrix}.
 
 \subsection*{\sffamily \large Convergence of a spherical cavity}
 
@@ -38,7 +38,7 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 \begin{figure}
   \centering
   \includegraphics[width=0.6\linewidth]{DolfinX_Sphere_const_coeff_error.png}
-  \caption{Error for the Kirkwood sphere.}
+  \caption{Error for the Kirkwood sphere. \textcolor{red}{Chris: I would remove the titles from the figs (applies to other figs)}}
   \label{fig:error_sphere}
 \end{figure}
 
@@ -51,7 +51,7 @@ These densities correspond to a grid scale parameter in Nanoshaper equal to 1.6,
 The surface meshes were inputs to our purely BEM solver and to create the FEM mesh with pyGAMer,~\cite{lee2020open} which invoked TetGen\cite{hang2015tetgen} with a quality parameter (radius-edge ratio) of 1.0.
 
 The solvation energy computed with the two schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Then, Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation.
+Then, Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation. \textcolor{red}{Chris: I though BEM-BEM outperformed FEM-BEM in total time. Am I wrong there?}
 
 
 \begin{figure}
@@ -138,11 +138,11 @@ Other implementations of Gaussian permittivities also modify the solute permitti
 We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
 We chose APBS because it provides an easy interface to control dielectric maps, in order to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
-\subsection*{\sffamily \large Convergence and performance for arginine}
+\subsection*{\sffamily \large Convergence for arginine with APBS}
 
-Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 0.5\% (0.5 kcal/mol).
+Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 0.5\% (0.5 kcal/mol). The coarsest meshes used in both cases are within the recommended densities for accurate solvation energy simulations with constant permittivity. For example, a finite difference mesh with $h$=0.5 \AA~ or less is recommended for binding energy calculations\cite{sorensen2015comprehensive} (the result of substracting two solvation energies), and a similar study with BEM\cite{CooperBardhanBarba2014} showed that a mesh with 2 vertices per \AA$^2$ gives acceptable results when computing binding and solvation energies. We see a jump in the solvation energy for the FEM-BEM results going from 4.1 to 6.7 vertices per \AA$^2$, but later the energy monotonically decreases, converging to a solution. This is an indication that mesh requirements for variable permitivities may be tighter than with a constant permittivity, even though the jump in dielectric constant accross the molecular surface is usually smaller. 
 
-Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. 
+Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. \textcolor{red}{Chris: if we don't include Fig. \ref{fig:arg2_variable}, we should remove this paragraph. I believe that if we show performance for fem-bem, a reviewer might be tempted to ask it for APBS too, which might be difficult.}
 
 \begin{table}
 \centering
@@ -174,7 +174,7 @@ coupling    & 8.57  & 8 844 & -109.658 \\
 %\hline
 \end{tabular}
 \caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh.}
-\label{table:arg2_variable}
+\label{table:arg_variable}
 \end{table}
 
 %\begin{figure}
@@ -197,7 +197,7 @@ coupling    & 8.57  & 8 844 & -109.658 \\
 \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_set_time.png}
 \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_iter.png}
 \caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
-}
+\textcolor{red}{Chris: not sure if we want to show performance here. Reviewers may ask for performance with APBS too, and those were run on a different machine, and has a number of steps.}}
 \label{fig:arg2_variable}
 \end{figure}
 
@@ -208,7 +208,7 @@ So far, we have only tested the FEM-BEM coupled approach with small structures. 
 
 Table \ref{table:large_variable} shows that the iteration count increases with the problem size. This is expected for Johnson-N\'ed\'elec, which is the simplest coupling strategy. To isolate the effect of the increased iterations in the analysis, we separate timings in ``setup'' and ``solving'' time, where the ``setup'' time is independent of the number of iterations, and the ``solving'' time corresponds to the time spent in the GMRES solver. Then, the time-per-iteration in table \ref{table:large_variable} only considers the ``solving'' time. Looking at the increase in degrees of freedom, which scales equivalently for FEM and BEM, the ``setup'' time scales slightly worse than $\mathcal{O}(N^2)$, mainly due to the dense nature of the BEM portion of the matrix \textcolor{red}{(check if not using fmm)}. On the other hand, the ``solving time per iteration'' scales closer to $\mathcal{O}(N)$. This is an indication that the high ``solving time'' is mainly due to the increase in iteration count, and having better conditioned coupling methods, such as the so-called hybrid approach,\cite{betcke2022hybrid} can have a large impact in the time to solution.
 
-Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up most of the available RAM memory (\textcolor{red}{check and rewrite}). If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require to improve not only in the conditioning of the system, but also in the choice of fast algorithms\cite{Wantfmm,Betrckefmm} and parallelization.
+Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up most of the available RAM memory (\textcolor{red}{check and rewrite}). If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require to improve not only in the conditioning of the system, but also in the choice of fast algorithms\cite{wang2021exafmm,kailasa2023pyexafmm} and parallelization.
 
 \begin{table}
 \centering
