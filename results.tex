@@ -37,8 +37,8 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\linewidth]{DolfinX_Sphere_const_coeff_error.png}
-  \caption{Error for the Kirkwood sphere. \textcolor{red}{Chris: I would remove the titles from the figs (applies to other figs)}}
+  \includegraphics[width=0.5\linewidth]{DolfinX_Sphere_const_coeff_error.png}
+  \caption{Error for the Kirkwood sphere.}
   \label{fig:error_sphere}
 \end{figure}
 
@@ -51,12 +51,12 @@ These densities correspond to a grid scale parameter in Nanoshaper equal to 1.6,
 The surface meshes were inputs to our purely BEM solver and to create the FEM mesh with pyGAMer,~\cite{lee2020open} which invoked TetGen\cite{hang2015tetgen} with a quality parameter (radius-edge ratio) of 1.0.
 
 The solvation energy computed with the two schemes is presented by Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Then, Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation. \textcolor{red}{Chris: I though BEM-BEM outperformed FEM-BEM in total time. Am I wrong there?}
+Then, Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of iterations count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need of using a hypersingular operator in the BEM formulation. \textcolor{red}{Chris: I thought BEM-BEM outperformed FEM-BEM in total time. Am I wrong there?} \textcolor{blue}{Michal: Not for this formulation of BEM-BEM since we have hypersingular operator. But you can see that for denser meshes we should outperform it.} 
 
 
 \begin{figure}
 \centering
-   \includegraphics[width=0.47\linewidth]{DolfinX_Arginine2_const_coeff_error.png}
+   \includegraphics[width=0.5\linewidth]{DolfinX_Arginine2_const_coeff_error.png}
 %   \includegraphics[width=0.47\linewidth]{DolfinX_Arginine_const_coeff_error_11.png}
 \caption{Solvation energy for arginine with a constant permittivity. %(left - Arginine2 and right - Arginine)
 %maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
@@ -143,8 +143,7 @@ We chose APBS because it provides an easy interface to control dielectric maps, 
 
 Table \ref{table:arg_variable} shows a comparison of solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the finest meshes agree up to 0.5\% (0.5 kcal/mol). The coarsest meshes used in both cases are within the recommended densities for accurate solvation energy simulations with constant permittivity. For example, a finite difference mesh with $h$=0.5 \AA~ or less is recommended for binding energy calculations\cite{sorensen2015comprehensive} (the result of substracting two solvation energies), and a similar study with BEM\cite{CooperBardhanBarba2014} showed that a mesh with 2 vertices per \AA$^2$ gives acceptable results when computing binding and solvation energies. We see a jump in the solvation energy for the FEM-BEM results going from 4.1 to 6.7 vertices per \AA$^2$, but later the energy monotonically decreases, converging to a solution. This is an indication that mesh requirements for variable permitivities may be tighter than with a constant permittivity, even though the jump in dielectric constant accross the molecular surface is usually smaller. 
 
-Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. \textcolor{red}{Chris: if we don't include Fig. \ref{fig:arg2_variable}, we should remove this paragraph. I believe that if we show performance for fem-bem, a reviewer might be tempted to ask it for APBS too, which might be difficult.}
-
+Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. \textcolor{red}{Chris: if we don't include Fig. \ref{fig:arg2_variable}, we should remove this paragraph. I believe that if we show performance for fem-bem, a reviewer might be tempted to ask it for APBS too, which might be difficult.}  \textcolor{blue}{Michal: I completely agree. We were even talking about not putting them, but just for our information, we kept it for now. They weren't going to be in the final version}
 \begin{table}
 \centering
 \begin{tabular}{c|c|c|c}
@@ -207,9 +206,9 @@ coupling    & 8.57  & 8 844 & -109.658 \\
 
 So far, we have only tested the FEM-BEM coupled approach with small structures. Here, we study its behaviour with larger structures to evaluate its applicability in more realistic settings, and  in test cases where BEM-BEM coupling is not an alternative. Using the same Gaussian permittivity field inside the molecule, we computed the solvation free energy of protein G B1 (955 atoms, PDB code 1pgb), lysozyme (1960 atoms, PDB code 1lyz), the barnase-barstar complex (9464 atoms, PDB code 1x1u), and immunoglobulin G (20148 atoms, PDB code 1igt). All structures were parameterized with the Amber\cite{Swanson05} force field using pdb2pqr.\cite{Dolinsky04} The surface was meshed with Nanoshaper\cite{decherchi2013general} considering a grid scale of 1.5, and then used to mesh the solute region with pyGAMer\cite{lee2020open} and TetGen\cite{hang2015tetgen} with a radius-edge ratio of 1.0. Solvation free energy and timings for these runs are presented in Table \ref{table:large_variable}, showing that our FEM-BEM coupling method can reach medium-to-large sized proteins on a workstation. 
 
-Table \ref{table:large_variable} shows that the iteration count increases with the problem size. This is expected for Johnson-N\'ed\'elec, which is the simplest coupling strategy. To isolate the effect of the increased iterations in the analysis, we separate timings in ``setup'' and ``solving'' time, where the ``setup'' time is independent of the number of iterations, and the ``solving'' time corresponds to the time spent in the GMRES solver. Then, the time-per-iteration in table \ref{table:large_variable} only considers the ``solving'' time. Looking at the increase in degrees of freedom, which scales equivalently for FEM and BEM, the ``setup'' time scales slightly worse than $\mathcal{O}(N^2)$, mainly due to the dense nature of the BEM portion of the matrix \textcolor{red}{(check if not using fmm)}. On the other hand, the ``solving time per iteration'' scales closer to $\mathcal{O}(N)$. This is an indication that the high ``solving time'' is mainly due to the increase in iteration count, and having better conditioned coupling methods, such as the so-called hybrid approach,\cite{betcke2022hybrid} can have a large impact in the time to solution.
+Table \ref{table:large_variable} shows that the iteration count increases with the problem size. This is expected for Johnson-N\'ed\'elec, which is the simplest coupling strategy. To isolate the effect of the increased iterations in the analysis, we separate timings in ``setup'' and ``solving'' time, where the ``setup'' time is independent of the number of iterations, and the ``solving'' time corresponds to the time spent in the GMRES solver. Then, the time-per-iteration in table \ref{table:large_variable} only considers the ``solving'' time. Looking at the increase in degrees of freedom, which scales equivalently for FEM and BEM, the ``setup'' time scales slightly worse than $\mathcal{O}(N^2)$, mainly due to the dense nature of the BEM portion of the matrix \textcolor{red}{(check if not using fmm  \textcolor{blue}{we are using FMM})}. On the other hand, the ``solving time per iteration'' scales closer to $\mathcal{O}(N)$. This is an indication that the high ``solving time'' is mainly due to the increase in iteration count, and having better conditioned coupling methods, such as the so-called hybrid approach,\cite{betcke2022hybrid} can have a large impact in the time to solution.
 
-Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up most of the available RAM memory (\textcolor{red}{check and rewrite}). If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require to improve not only in the conditioning of the system, but also in the choice of fast algorithms\cite{wang2021exafmm,kailasa2023pyexafmm} and parallelization.
+Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up most of the available RAM memory (\textcolor{red}{check and rewrite \textcolor{blue}{we are using around 50\% of memory}}). If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require to improve not only in the conditioning of the system, but also in the choice of fast algorithms\cite{wang2021exafmm,kailasa2023pyexafmm} and parallelization.
 
 \begin{table}
 \centering
@@ -220,8 +219,8 @@ Molecule & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving T
  1pgb  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 0.6 & 6 629  \\
  1lyz  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1.2 & 1 970  \\
  %1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 3.6 & 12 590   \\
- 1x1u & 263 181 & 81 258 \textcolor{red}{82360} &  -1 984.468 & 4 167 & 8 240 & 16 300 & 3.91 & 24 540  \\
- 1igt & 597 575 & 187 712 \textcolor{red}{189960} &   -3 294.230 & 8 361 & 41 200 & 64 200 & 7.67  &  105 400   \\
+ 1x1u & 263 181 & 81 258 \textcolor{red}{82360} \textcolor{blue}{???}&  -1 984.468 & 4 167 & 8 240 & 16 300 & 3.91 & 24 540  \\
+ 1igt & 597 575 & 187 712 \textcolor{red}{189960}  \textcolor{blue}{???}&   -3 294.230 & 8 361 & 41 200 & 64 200 & 7.67  &  105 400   \\
  \hline
 \end{tabular}}
 \caption{Results for larger structures with a variable permitivitty.}
