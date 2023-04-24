@@ -24,7 +24,11 @@
 \definecolor{background-color}{gray}{0.98}
 
 \title{Coupling finite and boundary element methods to solve the Poisson-Boltzmann equation for electrostatics in molecular solvation}
-\author{Micha\l{} Bosy\thanks{School of Computer Science and Mathematics, Kingston University London, Penrhyn Road, Kingston upon Thames, KT1 2EE, UK}, Matthew W. Scroggs\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, Timo Betcke\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, Erik Burman\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, Christopher D. Cooper\thanks{Department of Mechanical Engineering and Centro Cient\'ifico Tecnol\'ogico de Valpara\'iso, Universidad T\'ecnica Federico Santa Mar\'ia, Valpara\'iso 2390123, Chile}}
+\author{Micha\l{} Bosy\thanks{School of Computer Science and Mathematics, Kingston University London, Penrhyn Road, Kingston upon Thames, KT1 2EE, UK}, 
+    Matthew W. Scroggs\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, 
+    Timo Betcke\footnotemark[2],~\\%\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, 
+    Erik Burman\footnotemark[2],~%\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, 
+    Christopher D. Cooper\thanks{Department of Mechanical Engineering and Centro Cient\'ifico Tecnol\'ogico de Valpara\'iso, Universidad T\'ecnica Federico Santa Mar\'ia, Valpara\'iso 2390123, Chile}}
 
 \begin{document}
 
@@ -32,7 +36,7 @@
 
 
 \begin{abstract}
-Abstract
+The Poisson-Boltzmann equation is widely used to model electrostatics in molecular systems. Available software packages solve it using finite difference, finite element, and boundary element methods, where the latter is attractive due to the accurate representation of the molecular surface and partial charges, and exact enforcement of the boundary conditions at infinity. However, the boundary element method is limited to linear equations and piece-wise constant variations of the material properties. In this work, we present a scheme that couples finite and boundary elements for the Poisson-Boltzmann equation, where the finite element method is applied in a confined {\it solute} region, and the boundary element method in the external {\it solvent} region. As a proof-of-concept exercise, we used the simplest methods available: Johnson-N\'ed\'elec coupling with mass matrix and diagonal preconditioning, implemented in the Bempp-cl and FEniCSx libraries from a simple Python interface. We showcased our implementation by computing the polar component of the solvation free energy of a set of molecules using a constant and a Gaussian-varying permittivity. First, we validated our implementation against the finite differece code APBS (to 0.5\%), and then, we show scaling from protein G B1 (955 atoms) up to immunoglobuling G (20 148 atoms). For small problems we saw that the coupled method was efficient, outperforming a purely boundary integral approach, but scaled worse with size. For Gaussian-varying permittivities, which are beyond the applicability of boundary elements, we were able to run medium to large problems on a single workstation. However, our results illustrate the need to improve conditioning and incorporate distributed memory parallelism as we aim at larger systems. We hope this work will serve as inspiration for future developments that consider space-varying field parameters, and mixed linear-nonlinear schemes for molecular electrostatics with implicit solvent models. 
 \end{abstract}
 
 \begin{wileykeywords}
