@@ -44,7 +44,7 @@ Several possible boundary integral formulations of Equation \eqref{eq:pbe} exist
      \nonumber \\
     &\tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_2 +  \tfrac{\lambda_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right)
 \end{align}
-\textcolor{blue}{Michal: We only have $\phi_2$ and $\lambda_2$ and the solution later is from $\phi_1$ and $\lambda_1$!!!}
+%\textcolor{blue}{Michal: We only have $\phi_2$ and $\lambda_2$ and the solution later is from $\phi_1$ and $\lambda_1$!!!}
 
 
 %
@@ -166,7 +166,7 @@ Having computed the electrostatic potential with Eq. \eqref{eq:lu}, we obtain th
 \phi_{r}(\mathbf{r}) = - K_{L}^{\mathbf{r}} \phi_1 + V_{L}^{\mathbf{r}}  \lambda_1  ,
 \end{align}
 %
-where $\mathbf{r}\in\Omega_1$.
+where $\mathbf{r}\in\Omega_1$, and we can obtain $\phi_1$ and $\lambda_1$ from $\phi_2$ and $\lambda_2$ by applying the interface condicions from Eq. \eqref{eq:pbe}.
 This is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
 
 
