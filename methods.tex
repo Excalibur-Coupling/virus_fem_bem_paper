@@ -27,9 +27,9 @@ The electrostatic potential in $\Omega_1$ can be further decomposed into singula
 Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_r$, also known as reaction potential, is originated by the polarization of the solvent and reorganization of the free ions. 
 Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$, however, this is not the general case.
 
-Regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permitivitties in the solute.\cite{wang2022regularization} However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permitivitties, beyond super-Gaussian descriptions.
+Regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permittivities in the solute.\cite{wang2022regularization} However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permittivities, beyond super-Gaussian descriptions.
 
-A common quantity of interest in implicit solvent models is the solvation free energy, which the change in Gibbs free energy as the molecule moves from vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
+A common quantity of interest in implicit solvent models is the solvation free energy, which is the change in Gibbs free energy as the molecule moves from the vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
 %
 \begin{equation}\label{eq:dG} 
 \Delta G_{solv} = \tfrac{1}{2}\int_{\Omega_1} \rho(\mathbf{x})\phi_{r}(\mathbf{x}) = \tfrac{1}{2}\sum_{k=1}^{N_q} q_k\phi_r(\mathbf{x_k})
@@ -37,7 +37,7 @@ A common quantity of interest in implicit solvent models is the solvation free e
 
 \subsection*{\sffamily \large BEM-BEM coupling}
 
-Several possible boundary integral formulations of Equation \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon ºand Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
+Several possible boundary integral formulations of Equation \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon and Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
 %
 \begin{align}\label{eq:lu}
     & \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}
@@ -166,7 +166,7 @@ Having computed the electrostatic potential with Eq. \eqref{eq:lu}, we obtain th
 \phi_{r}(\mathbf{r}) = - K_{L}^{\mathbf{r}} \phi_1 + V_{L}^{\mathbf{r}}  \lambda_1  ,
 \end{align}
 %
-where $\mathbf{r}\in\Omega_1$, and we can obtain $\phi_1$ and $\lambda_1$ from $\phi_2$ and $\lambda_2$ by applying the interface condicions from Eq. \eqref{eq:pbe}.
+where $\mathbf{r}\in\Omega_1$, and we can obtain $\phi_1$ and $\lambda_1$ from $\phi_2$ and $\lambda_2$ by applying the interface conditions from Eq. \eqref{eq:pbe}.
 This is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
 
 
@@ -183,9 +183,9 @@ The boundary element method (BEM) is a standard tool for the numerical solution 
 \phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2(\mathbf{x})\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
 \end{align}
 %
-A finite element method (FEM) is more suitable for such case.
+A finite element method (FEM) is more suitable for such a case.
 
-The coupling of finite element (FEM) and boundary element (BEM) methods is a widely used approach to solve multi-physical problems on unbounded domains [citation?], as it takes advantage of both methods. On one hand, the BEM satifies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces, hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
+The coupling of finite element (FEM) and boundary element (BEM) methods is a widely used approach to solve multi-physical problems on unbounded domains [citation?], as it takes advantage of both methods. On one hand, the BEM satisfies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces, hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
 Here, we used the Johnson-N\'ed\'elec formulation,\cite{johnson1980coupling} which is the simplest form of FEM-BEM coupling, and we detail it next.
 
    We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$, we have
