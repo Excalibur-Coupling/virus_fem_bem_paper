@@ -37,9 +37,8 @@ The error in Figure \ref{fig:error_sphere} decays linearly with the surface area
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.45\linewidth]{DolfinX_Sphere_const_coeff_error_1e-4.png}
   \includegraphics[width=0.45\linewidth]{DolfinX_Sphere_const_coeff_error.png}
-  \caption{Error for the Kirkwood sphere.  \textcolor{blue}{(LEFT: $tol = 10^{-4}$, RIGHT: $tol = 10^{-5}$)}}
+  \caption{Error for the Kirkwood sphere.  }
   \label{fig:error_sphere}
 \end{figure}
 
@@ -58,59 +57,18 @@ Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-t
 
 \begin{figure}
 \centering
-   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_error_1e-4.png}
    \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_error.png}
-%   \includegraphics[width=0.47\linewidth]{DolfinX_Arginine_const_coeff_error_11.png}
-\caption{Solvation energy for arginine with a constant permittivity.  \textcolor{blue}{(LEFT: $tol = 10^{-4}$, RIGHT: $tol = 10^{-5}$)}}
+\caption{Solvation energy for arginine with a constant permittivity.}
 \label{fig:arg_constant_energy}
 \end{figure}
 
 \begin{figure}
 \centering
-   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_iter_1e-4.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_time.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_setup_time.png}
-  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_total_time_1e-4.png}
-%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_iter_11.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_time_11.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_setup_time_11.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_total_time_11.png}
    \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_iter.png}
   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_total_time.png}
-  \caption{Iteration count (left) and time-to-solution (right) for arginine with a constant permittivity.  \textcolor{blue}{(UP: $tol = 10^{-4}$, DOWN: $tol = 10^{-5}$)}
-}
+  \caption{Iteration count (left) and time-to-solution (right) for arginine with a constant permittivity.  }
 \label{fig:arg2_constant_time_iter}
 \end{figure}
-
-%\begin{figure}
-%\centering
-%%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_iter.png}
-%%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_time.png}
-%%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_setup_time.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_const_coeff_total_time.png}
-%   \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_iter_11.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_time_11.png}
-%%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_setup_time_11.png}
-%  \includegraphics[width=0.45\linewidth]{DolfinX_Arginine_const_coeff_total_time_11.png}
-%  \caption{Iteration count (left) and time-to-solution (right) for Arginine with a constant permittivity. %(left: Online time taken to solve systems, right: Offline time taken to set up systems). 
-%%NOTE: x axis differ between top and bottom. Also, should we include preconditioned vs non preconditioned? We could easily precondition BEM-BEM too.  %(1) fix title, (2) can we put them in a single plot, (3) 
-%%maybe we could also add a "error" wrt extrapolation, or a plot with energy for each mesh?
-%}
-%\label{fig:arg_constant_time_iter}
-%\end{figure}
-
-
-%\begin{figure}
-%\centering
-%%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_error.png}
-%  \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_iter_11.png}
-%%   \includegraphics[width=0.45\linewidth]{No_prec_Arginine_const_coeff_iter.png}
-%%   \includegraphics[width=0.45\linewidth]{Arginine_const_coeff_time.png}
-%\caption{Iteration count for arginine with a constant permittivity. %(1) fix title, (2) can we put them in a single plot, (3) hybrid is internal or external iterations? maybe we should present the total count?
-%}
-%\label{fig:arg_contant_iter}
-%\end{figure}
-
 
 
 \section*{\sffamily \Large Results with variable permittivity}
@@ -160,13 +118,13 @@ Table \ref{table:arg_variable} shows a comparison of solvation energy computed w
 &Mesh dens. & DOFs & $\Delta G_{solv}$\\
 &vert/\AA$^2$   &  &  kcal/mol \\
 \hline
-%\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
-    & 4.1 & 3 491 & -109.907 \\
-FEM-BEM    & 6.7  & 5 787 & -110.199 \\
-coupling    & 8.57  & 8 844 & -109.582 \\
-    & 17 & 19 911 & -109.350 \\
-    & 24.5 & 32 302 & -109.265 \\
-\hline
+%%\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
+%    & 4.1 & 3 491 & -109.907 \\
+%FEM-BEM    & 6.7  & 5 787 & -110.199 \\
+%coupling    & 8.57  & 8 844 & -109.582 \\
+%    & 17 & 19 911 & -109.350 \\
+%    & 24.5 & 32 302 & -109.265 \\
+%\hline
 %\multirow{5}{*}{Standard FEM-BEM}& 2 & -36.239\\
     & 4.1 & 3 491 & -109.931 \\
 FEM-BEM    & 6.7  & 5 787 & -110.237 \\
@@ -175,34 +133,9 @@ coupling    & 8.57  & 8 844 & -109.661 \\
     & 24.5 & 32 302 & -109.315 \\
 \hline
 \end{tabular}
-\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh. \textcolor{blue}{(MIDDLE: $tol = 10^{-4}$, DOWN: $tol = 10^{-5}$)}}
+\caption{Solvation energy of arginine with a Gaussian-like permittivity, computed using the FEM-BEM approach and APBS. The mesh density for FEM-BEM corresponds to the vertex density of the surface mesh used to generate the volumetric mesh.}
 \label{table:arg_variable}
 \end{table}
-
-%%\begin{figure}
-%%\centering
-%%% \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter.png}
-%%% \includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_time.png}
-%%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_time_11.png}
-%%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_setup_time_11.png}
-%%\includegraphics[width=0.45\linewidth]{Arginine_varying_coeff_iter_11.png}
-%%\caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
-%%}
-%%\label{fig:arg_variable}
-%%\end{figure}
-%
-%\begin{figure}
-%\centering
-%% \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_iter.png}
-%% \includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_time.png}
-%\includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_time.png}
-%\includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_set_time.png}
-%\includegraphics[width=0.45\linewidth]{DolfinX_Arginine2_varying_coeff_iter.png}
-%\caption{Iteration count and time-to-solution to compute the solvation energy of arginine with a variable permittivity (left: Online time taken to solve systems, right: Offline time taken to set up systems), using FEM-BEM coupling. %Can we make this only two plots?
-%\textcolor{red}{Chris: not sure if we want to show performance here. Reviewers may ask for performance with APBS too, and those were run on a different machine, and has a number of steps.}}
-%\label{fig:arg2_variable}
-%\end{figure}
-
 
 \subsection*{\sffamily \large Performance analysis for larger structures}
 
@@ -220,36 +153,18 @@ If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2
 Molecule & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Solv. time per & Total Time \\
 & DOFs & DOFs &  kcal/mol & & [sec] & [sec] & iter. [sec] & [sec] \\
 \hline
- 1pgb  & 29 434 &  10 058 &  -300.389 & 613 & 89 & 410 & 0.67 & 702  \\
- 1lyz  & 56 114 & 18 606 &  -597.515 & 724 & 334 & 921  & 1.27 & 1 255   \\
- %1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 3.6 & 12 590   \\
- 1x1u & 263 181 & 81 258 &  -1 975.068 & 1 911 & 8 240 & 7 410 & 3.88 & 15 650  \\
- 1igt & 597 575 & 187 712 &   -3 279.907 & 1 974 & 40 930 & 15 600 & 7.9  &  56 530   \\
- \hline
+% 1pgb  & 29 434 &  10 058 &  -300.389 & 613 & 89 & 410 & 0.67 & 702  \\
+% 1lyz  & 56 114 & 18 606 &  -597.515 & 724 & 334 & 921  & 1.27 & 1 255   \\
+% %1lyz gs3 & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 3.6 & 12 590   \\
+% 1x1u & 263 181 & 81 258 &  -1 975.068 & 1 911 & 8 240 & 7 410 & 3.88 & 15 650  \\
+% 1igt & 597 575 & 187 712 &   -3 279.907 & 1 974 & 40 930 & 15 600 & 7.9  &  56 530   \\
+% \hline
   1pgb  & 29 434 &  10 058 &  -300.888 & 703 & 86 & 472 & 0.67 & 789  \\
- 1lyz  & 56 114 & 18 606 &  -599.310 & 1073 & 336 & 1 350  & 1.26 & 1 686   \\
+ 1lyz  & 56 114 & 18 606 &  -599.310 & 1 073 & 336 & 1 350  & 1.26 & 1 686   \\
  1x1u & 263 181 & 81 258 & -1 982.085 & 2 791 & 8 340 & 11 000 & 3.94 & 19 340  \\
  1igt & 597 575 & 187 712 &  -3 294.0157 & 5 366 & 41 998 & 40 100 &  7.47 & 82 098    \\
  \hline
 \end{tabular}}
-\caption{Results for larger structures with a variable permittivity. \textcolor{blue}{(UP: $tol = 10^{-4}$, DOWN: $tol = 10^{-5}$)}
-}
+\caption{Results for larger structures with a variable permittivity.}
 \label{table:large_variable}
 \end{table}
-%
-%\begin{table}
-%\centering
-%\begin{tabular}{c|c|c|c|c|c|c|c|c}
-%Molecule & Mesh size  & FEM  & BEM &  $\Delta G_{solv}$ & Iterations & Setup Time & Solving Time & Total Time \\
-%& vert/\AA$^2$ & DOFs & DOFs &  kcal/mol & & sec & sec & sec \\
-%\hline
-% 1pgb &  & 29 434 &  10 058 &  -300.888 & 826 & 82 & 547 & 629  \\
-% 1lyz &  & 56 114 & 18 606 &  -599.642 & 1 285 & 330 & 1 640  & 1 970  \\
-% 1lyz gs3 &  & 257 391 & 75 048 &  -600.637 & 2 949  & 1 690 & 10 900 & 12 590   \\
-% 1uxu &  & 263 181 & 81 258 &  -1 984.468 & 4 167 & 8 240 & 16 300 & 24 540  \\
-% 1igt &  & 597 575 & 187 712 &   -3 294.230 & 8 361 & 41 200 & 64 200 &  105 400   \\
-% \hline
-%\end{tabular}
-%\caption{Large tests' results}
-%\label{table:large_variable}
-%\end{table}
