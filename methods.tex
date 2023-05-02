@@ -1,14 +1,18 @@
 \subsection*{\sffamily \large The implicit solvent model}
 
-The implicit solvent model\cite{RouxSimonson1999,DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson-Boltzmann governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson equation in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous. 
+The implicit solvent model\cite{RouxSimonson1999,DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson--Boltzmann equation governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson equation govnerns in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous across the surface.
 %
-\begin{align}\label{eq:pbe}
-\nabla^2\phi_1(\mathbf{x}) &= \tfrac{1}{\epsilon_1}\sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
-\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
-\phi_1(\mathbf{x})  = \phi_2 (\mathbf{x}), &\quad \epsilon_1\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
+\begin{subequations}
+\label{eq:pbe}
+\begin{align}
+\nabla^2\phi_1(\mathbf{x}) &= \tfrac{1}{\epsilon_1}\sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k)&&\mathbf{x} \in \Omega_1,\label{eq:pbe1}\\
+\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0&&\mathbf{x}\in\Omega_2,\label{eq:pbe2}\\
+\phi_1(\mathbf{x})  &= \phi_2 (\mathbf{x}),&&\mathbf{x}\in \Gamma,\label{eq:pbe3}\\
+\epsilon_1\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x}) &= \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})&&\mathbf{x}\in \Gamma. \label{eq:pbe4}
 \end{align}
+\end{subequations}
 %
-Here, $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute and solvent, respectively, $\kappa$ is the inverse of the Debye length, related with the salt concentration, and $q_k$ are the values of the partial charges, located at $\mathbf{x}_k$.
+Here, $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute and solvent, respectively; $\kappa$ is the inverse of the Debye length, related to the salt concentration; and $q_k$ are the values of the partial charges, located at $\mathbf{x}_k$.
 
 \begin{figure}[h]
 \centering
@@ -20,42 +24,40 @@ Here, $\epsilon_1$ and $\epsilon_2$ are the dielectric constants in the solute a
 The electrostatic potential in $\Omega_1$ can be further decomposed into singular and regular components as $\phi_1 = \phi_c + \phi_r$, where $\phi_c$ is the solution to
 %
 \begin{align}\label{eq:phic}
-\nabla^2\phi_c(\mathbf{x}) &= \tfrac{1}{\epsilon}\sum_{k=1}^{N_q}q_k\delta(\mathbf{x},\mathbf{x}_k) \quad \mathbf{x}\in\Omega_1\cup\Omega_2\nonumber\\
-\phi_c(\mathbf{x})&=0 \quad \text{ as } |\mathbf{x}|\to\infty
+\nabla^2\phi_c(\mathbf{x}) &= \tfrac{1}{\epsilon}\sum_{k=1}^{N_q}q_k\delta(\mathbf{x},\mathbf{x}_k) &&\mathbf{x}\in\Omega_1\cup\Omega_2,\nonumber\\
+\phi_c(\mathbf{x})&=0 &&\text{ as } |\mathbf{x}|\to\infty.
 \end{align}
-
 Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_r$, also known as reaction potential, is originated by the polarization of the solvent and reorganization of the free ions. 
-Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$, however, this is not the general case.
+Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$. However, this is not the general case.
 
-Regularized versions of Equation \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson-Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permittivities in the solute.\cite{wang2022regularization} However, here we use the standard formulation in Equation \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permittivities, beyond super-Gaussian descriptions.
+Regularized versions of the equations in \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson--Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permittivities in the solute.\cite{wang2022regularization} However, here we use the standard formulation in \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permittivities, beyond super-Gaussian descriptions.
 
 A common quantity of interest in implicit solvent models is the solvation free energy, which is the change in Gibbs free energy as the molecule moves from the vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
 %
 \begin{equation}\label{eq:dG} 
-\Delta G_{solv} = \tfrac{1}{2}\int_{\Omega_1} \rho(\mathbf{x})\phi_{r}(\mathbf{x}) = \tfrac{1}{2}\sum_{k=1}^{N_q} q_k\phi_r(\mathbf{x_k})
+\Delta G_{\text{solv}} = \tfrac{1}{2}\int_{\Omega_1} \rho(\mathbf{x})\phi_{r}(\mathbf{x}) = \tfrac{1}{2}\sum_{k=1}^{N_q} q_k\phi_r(\mathbf{x_k}).
 \end{equation}
 
 \subsection*{\sffamily \large BEM-BEM coupling}
 
-Several possible boundary integral formulations of Equation \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon and Lenhoff in 1991,~\cite{YoonLenhoff1990} known as the \emph{direct} formulation, however, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
+Several possible boundary integral formulations of \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon and Lenhoff in 1991\cite{YoonLenhoff1990} and is known as the \emph{direct formulation}. However, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
 %
 \begin{align}\label{eq:lu}
-    & \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}
+    \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 &= \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|},
      \nonumber \\
-    &\tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_2 +  \tfrac{\lambda_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2 = \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right)
+    \tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_2 +  \tfrac{\lambda_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2 &= \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right),
 \end{align}
-%\textcolor{blue}{Michal: We only have $\phi_2$ and $\lambda_2$ and the solution later is from $\phi_1$ and $\lambda_1$!!!}
-
-
-%
-In Equation \eqref{eq:lu}, $\phi_1 = \phi_1(\mathbf{x}_\Gamma)$ and $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ are the potentials on $\Gamma$ as we approach from $\Omega_1$ and $\Omega_2$, respectively. For convenience, we call the normal derivative on the interface ({\it ie.} the Neumann trace) $\lambda=\left(\frac{\partial}{\partial \mathbf{n}}  \phi_{\Gamma}  \right)$. $V$, $K$, $K^{\prime}$, and $W$ are the single-layer, double-layer, adjoint double-layer, and hypersingular operators for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels. These are defined %in Equation~\eqref{eq:single_double} and 
-as
+where $\phi_2 = \phi_2(\mathbf{x}_\Gamma)$ is the potential on $\Gamma$ as we approach from $\Omega_2$ ({\it ie.} the exterior Dirichlet trace),
+and $\lambda_2 = \frac{\partial}{\partial \mathbf{n}}\phi_2$ is the normal derivative $\Gamma$ as we approach from $\Omega_2$ ({\it ie.} the exterior Neumann trace).
+Note that we could use equations \eqref{eq:pbe3} and \eqref{eq:pbe4} to rewrite Equation \eqref{eq:lu} in terms of the interior traces $\phi_1$ and $\lambda_1$.
+The operators $V$, $K$, $K^{\prime}$, and $W$ that appear in Equation \eqref{eq:lu} are the single-layer, double-layer, adjoint double-layer, and hypersingular operators for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels. These are defined %in Equation~\eqref{eq:single_double} and 
+by
 %
 \begin{align}\label{eq:all_op}
-V_i^\Gamma \varphi (\mathbf{x}) &= \oint_\Gamma g_i(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
+V_i^\Gamma \varphi (\mathbf{x}) &= \oint_\Gamma g_i(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
 K_i^\Gamma \varphi (\mathbf{x}) &= \oint_\Gamma \frac{\partial g_i}{\partial\mathbf{n}'}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
-K^{\prime\Gamma}_i\varphi (\mathbf{x}) &= \oint_\Gamma \frac{g_i}{\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'\nonumber\\
-W^\Gamma_i\varphi (\mathbf{x}) &= - \oint_\Gamma \frac{\partial^2 g_i}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{x}_\Gamma,\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}'
+K^{\prime\Gamma}_i\varphi (\mathbf{x}) &= \oint_\Gamma \frac{g_i}{\partial\mathbf{n}}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',\nonumber\\
+W^\Gamma_i\varphi (\mathbf{x}) &= - \oint_\Gamma \frac{\partial^2 g_i}{\partial\mathbf{n}'\partial\mathbf{n}}(\mathbf{x},\mathbf{x}')\varphi(\mathbf{x}')d\mathbf{x}',
 \end{align}
 %
 where $i \in \{L,Y\}$, $\varphi(\mathbf{x})$ can be any distribution over $\Gamma$, and %Green's functions $g_L, g_Y$ were defined in Equation~\eqref{eq:green_func}.
@@ -117,11 +119,11 @@ are the corresponding free-space Green's functions.
 %In weak form, Eq. \eqref{eq:lu} becomes
 %%
 %\begin{align}\label{eq:lu_disc}
-%&\left< \left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) \tfrac{\phi_{2}}{2} - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_{2}, v \right>_{\Gamma} + \left< \left(V_Y^\Gamma - V_L^\Gamma\right) \lambda_2, v \right>_\Gamma = \left< \sum_{k=0}^{N_q}  f_k, v \right>_{\Gamma} \nonumber \\
-%&\left< \tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_{2}, \zeta \right>_\Gamma + \left<  \left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) \tfrac{\lambda_2}{2} + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2, \zeta\right>_\Gamma = \left< \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}} f_k, \zeta \right>_{\Gamma}
+%&\left\langle \left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) \tfrac{\phi_{2}}{2} - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_{2}, v \right\rangle_{\Gamma} + \left\langle \left(V_Y^\Gamma - V_L^\Gamma\right) \lambda_2, v \right\rangle_\Gamma = \left\langle \sum_{k=0}^{N_q}  f_k, v \right\rangle_{\Gamma} \nonumber \\
+%&\left\langle \tfrac{\epsilon_1}{\epsilon_2}\left(W_Y^\Gamma - W_L^\Gamma\right)\phi_{2}, \zeta \right\rangle_\Gamma + \left\langle  \left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) \tfrac{\lambda_2}{2} + \left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right)\lambda_2, \zeta\right\rangle_\Gamma = \left\langle \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}} f_k, \zeta \right\rangle_{\Gamma}
 %\end{align}
 %%
-%where $v, \zeta$ are test functions, $\left<\varphi,v\right>_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ %and $\left(\varphi,v\right)_\Omega = \int_\Omega \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ are 
+%where $v, \zeta$ are test functions, $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ %and $\left(\varphi,v\right\rangle_\Omega = \int_\Omega \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ are 
 %is the inner products on the surface% and domain, respectively
 %and $f_k := \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}$.
 %
@@ -129,16 +131,16 @@ are the corresponding free-space Green's functions.
 %functions of $W_{h}^{k}$ and  $\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ - the vector of canonical basis
 %functions of $\Lambda_{h}^{l}$. We define the following matrices associated with the corresponding bilinear forms
 %\begin{align*}
-%\widetilde{K}_{\alpha \beta} = \left<\left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right) \phi^{\alpha}_2, \ \lambda^{\beta}_2 \right>_{\Gamma}
+%\widetilde{K}_{\alpha \beta} = \left\langle\left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right) \phi^{\alpha}_2, \ \lambda^{\beta}_2 \right\rangle_{\Gamma}
 % &,&
-%\widetilde{V}_{\alpha \beta} = \left<\left(V_Y^\Gamma - V_L^\Gamma\right) \lambda^{\alpha}_2, \ \lambda^{\beta}_2 \right>_{\Gamma}, \\
-%\widetilde{W}_{\alpha \beta} = \left<\left(W_Y^\Gamma - W_L^\Gamma\right) \phi^{\alpha}_2, \ \phi^{\beta}_2 \right>_{\Gamma}
+%\widetilde{V}_{\alpha \beta} = \left\langle\left(V_Y^\Gamma - V_L^\Gamma\right) \lambda^{\alpha}_2, \ \lambda^{\beta}_2 \right\rangle_{\Gamma}, \\
+%\widetilde{W}_{\alpha \beta} = \left\langle\left(W_Y^\Gamma - W_L^\Gamma\right) \phi^{\alpha}_2, \ \phi^{\beta}_2 \right\rangle_{\Gamma}
 % &,&
-%\widetilde{K'}_{\alpha \beta} = \left<\left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right) \lambda^{\alpha}_2, \ \phi^{\beta}_2 \right>_{\Gamma},
+%\widetilde{K'}_{\alpha \beta} = \left\langle\left(\tfrac{\epsilon_1}{\epsilon_2}K_Y^{\prime\Gamma} - K_L^{\prime\Gamma}\right) \lambda^{\alpha}_2, \ \phi^{\beta}_2 \right\rangle_{\Gamma},
 %\end{align*}
 %and vectors associated with the corresponding linear forms
 %\begin{align*}
-%\vec{f}_{\beta} = \left< \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|},   \phi^{\beta}_1  \right>_{\Gamma} &,& \vec{\partial f}_{\beta} = \left< \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right),   \phi^{\beta}_1  \right>_{\Gamma}.
+%\vec{f}_{\beta} = \left\langle \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|},   \phi^{\beta}_1  \right\rangle_{\Gamma} &,& \vec{\partial f}_{\beta} = \left\langle \sum_{k=0}^{N_q}  \frac{\partial}{\partial\mathbf{n}_\mathbf{x}}\left(\frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|}\right),   \phi^{\beta}_1  \right\rangle_{\Gamma}.
 %\end{align*}
 %
 %Using the above definition the discrete problem~\eqref{eq:fem_bem_disctrete} can be written in the following matrix form
@@ -160,52 +162,53 @@ are the corresponding free-space Green's functions.
 %%
 %
 
-Having computed the electrostatic potential with Eq. \eqref{eq:lu}, we obtain the reaction potential ($\phi_r$) in Eq. \eqref{eq:dG} by subtracting out the Coulombic component out of $\phi_1$. This gives\cite{CooperBardhanBarba2014}
+Having computed the electrostatic potential with Eq.~\eqref{eq:lu}, we obtain the reaction potential ($\phi_r$) in Eq.~\eqref{eq:dG} by subtracting the Coulombic component from $\phi_1$. This gives\cite{CooperBardhanBarba2014}
 %
 \begin{align} \label{eq:phi_reac}
-\phi_{r}(\mathbf{r}) = - K_{L}^{\mathbf{r}} \phi_1 + V_{L}^{\mathbf{r}}  \lambda_1  ,
+\phi_{r}(\mathbf{r}) = - K_{L}^{\Gamma} \phi_1(\mathbf{r}) + V_{L}^{\Gamma}  \lambda_1(\mathbf{r}),
 \end{align}
 %
-where $\mathbf{r}\in\Omega_1$, and we can obtain $\phi_1$ and $\lambda_1$ from $\phi_2$ and $\lambda_2$ by applying the interface conditions from Eq. \eqref{eq:pbe}.
-This is valid as long as $\epsilon_1$ is a constant. We use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
+where $\mathbf{r}\in\Omega_1$, and we can obtain $\phi_2$ and $\lambda_2$ from $\phi_1$ and $\lambda_1$ by applying the interface conditions \eqref{eq:pbe3} and \eqref{eq:pbe4}.
+This is valid as long as $\epsilon_1$ is a constant, so we use Eq.~\eqref{eq:phi_reac} for both BEM-BEM and FEM-BEM coupling simulations with constant $\epsilon_1$.
 
 
 
-\subsection*{\sffamily \large Novel numerical solution of the Poisson-Boltzmann equation}
+\subsection*{\sffamily \large Novel numerical solution of the Poisson--Boltzmann equation}
 
 %\subsection*{\sffamily \normalsize FEM-BEM coupling}
 
-The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson-Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,cooper2016pygbe} and more recently, with Bempp-cl.~\cite{search2022towards}. Its popularity comes because it reduces the dimension of the problem by using the boundary integral formulation. Unfortunately, this advantage comes at a cost: it requires a fundamental solution to be applied. There are many linear problems for which fundamental solutions are not known, for example, this is the case for the Poisson-Boltzmann equation with a heterogenous permittivity inside the molecule
+The boundary element method (BEM) is a standard tool for the numerical solution of the Poisson--Boltzmann equation in molecular electrostatics.~\cite{ZauharMorgan1985, Shaw1985} This was implemented in numerous codes, such as AFMPB,~\cite{LuETal2006} TABI,~\cite{GengKrasny2013} PyGBe,~\cite{CooperBardhanBarba2014,cooper2016pygbe} and more recently, with Bempp-cl\cite{search2022towards}. One strong advantage of BEM is that it reduces the dimension of the problem by using the boundary integral formulation. Unfortunately, this advantage comes at a cost: it requires a fundamental solution to be known in order for the method to be applied. There are many linear problems for which fundamental solutions are not known: this is the case for the Poisson-Boltzmann equation with a heterogenous permittivity inside the molecule, \emph{ie}.
 %
-   \begin{align} \label{eq:pbe_vp}
-\nabla \cdot \left(\epsilon_1(\mathbf{x}) \nabla \phi_1(\mathbf{x})\right) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) \quad  \mathbf{x} \in \Omega_1\nonumber\\
-\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 \quad\mathbf{x}\in\Omega_2\nonumber\\
-\phi_1(\mathbf{x})  = \phi_2(\mathbf{x}),  &\quad \epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  = \epsilon_2(\mathbf{x})\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x})  \quad \mathbf{x}\in \Gamma. 
+\begin{align} \label{eq:pbe_vp}
+\nabla \cdot \left(\epsilon_1(\mathbf{x}) \nabla \phi_1(\mathbf{x})\right) &= \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k) &&\mathbf{x} \in \Omega_1,\nonumber\\
+\left(\nabla^2 - \kappa^2\right)\phi_2(\mathbf{x})  &= 0 &&\mathbf{x}\in\Omega_2,\nonumber\\
+\phi_1(\mathbf{x})  &= \phi_2(\mathbf{x}),&&\mathbf{x}\in \Gamma,\nonumber\\
+\epsilon_1(\mathbf{x})\frac{\partial\phi_1}{\partial\mathbf{n}}(\mathbf{x})  &= \epsilon_2\frac{\partial\phi_2}{\partial\mathbf{n}}(\mathbf{x}) &&\mathbf{x}\in \Gamma. 
 \end{align}
 %
 A finite element method (FEM) is more suitable for such a case.
 
-The coupling of finite element (FEM) and boundary element (BEM) methods is a widely used approach to solve multi-physical problems on unbounded domains [citation?], as it takes advantage of both methods. On one hand, the BEM satisfies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces, hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
-Here, we used the Johnson-N\'ed\'elec formulation,\cite{johnson1980coupling} which is the simplest form of FEM-BEM coupling, and we detail it next.
+The coupling of FEM and BEM is an approach that can be used to solve a wide range of multiphysics problems on unbounded domains\cite{hiptmair2002,banjai2015}, as it takes advantage of both methods. On the one hand, the BEM satisfies the infinite boundary conditions exactly when they decay to zero, and only approximates boundary conditions on surfaces; hence, it is commonly used for problems involving infinite or semi-infinite domains. On the other hand, the FEM is known for its robustness and universal applicability, even for problems of inhomogeneous or non-linear nature.
+Here, we use the Johnson--N\'ed\'elec formulation,\cite{johnson1980coupling} which is the simplest formulation of FEM-BEM coupling, and we detail it next.
 
-   We start with the variational formulation of the internal problem. Applying integration by parts for first equation of~\eqref{eq:pbe_vp} for every $v \in H_0^1(\Omega_1)$, we have
+We start with the variational formulation of the internal problem. Applying integration by parts to the first equation of~\eqref{eq:pbe_vp} we have, for every $v \in H_0^1(\Omega_1)$,
 % 
 \begin{equation}
 \label{eq:fem}
- \left( \epsilon_1 \nabla \phi_1, \nabla v \right)_{\Omega_1}  -  \left<  \epsilon_1\partial_n \phi_1, v \right>_\Gamma =  \left( \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v\right)_{\Omega_1},
+ \left\langle \epsilon_1 \nabla \phi_1, \nabla v \right\rangle_{\Omega_1}  -  \left\langle  \epsilon_1\partial_n \phi_1, v \right\rangle_\Gamma =  \left\langle \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v\right\rangle_{\Omega_1},
 \end{equation}
 %
-where $v$ is a test function, and $\left<\varphi,v\right>_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ and $\left(\varphi,v\right)_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})v(\mathbf{x})d\mathbf{x}$ are the inner products on the surface and domain, respectively.
+where $v$ is a test function, and $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})\overline{v(\mathbf{x})}\,\mathrm{d}\mathbf{x}$ and $\left\langle\varphi,v\right\rangle_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})\overline{v(\mathbf{x})}\,\mathrm{d}\mathbf{x}$ are the inner products on the surface and in the domain, respectively.
 For the external problem with BEM, we define the Dirichlet trace~\cite{MR2361676} 
 \begin{align*}
 % \label{eq:trace_map}
-\gamma:  H^1(\Omega_2) &\rightarrow H^{\frac{1}{2}}(\Gamma) & \gamma f(x) & := \lim_{\Omega_2 \ni y \rightarrow x \in \Gamma}  f(y),
+\gamma:  H^1(\Omega_2) &\rightarrow H^{\frac{1}{2}}(\Gamma), & \gamma f(x) & := \lim_{\Omega_2 \ni \mathbf{y} \rightarrow \mathbf{x} \in \Gamma}  f(\mathbf{y}),
 \end{align*}
 and we use the direct formulation from the second equation of Eq.~\eqref{eq:pbe} to obtain
 \begin{align*}
 \tfrac{\phi_1}{2} - K_{Y}^{\Gamma}\gamma \phi_1 + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma}  \lambda_1 & = 0.
 \end{align*}
-$V$ and $K$ are the single-layer and double-layer operators for the Laplace (subscript $L$) and Yukawa (subscript $Y$, also known as modified Helmholtz) kernels. These are defined in Equations~\eqref{eq:all_op} and~\eqref{eq:green_func}.
+$V$ and $K$ are the single-layer and double-layer operators as defined in Equation~\eqref{eq:all_op}.
 %as
 %
 %\begin{align}\label{eq:single_double}
@@ -224,50 +227,45 @@ $V$ and $K$ are the single-layer and double-layer operators for the Laplace (sub
 %
 %are the corresponding free-space Green's functions.
 
-Then, the coupling problem can be written as
-%
-\begin{center}
-  \textit{Find $ \phi_1 \in H^1(\Omega_1)$ and $\lambda_2 \in H^{-\frac{1}{2}}(\Gamma)$ such that for all $v \in H^1(\Omega_1)$ and $\zeta \in H^{-\frac{1}{2}}(\Gamma)$}
-\begin{equation} 
+Then, the coupling problem can be written as: \textit{Find $ \phi_1 \in H^1(\Omega_1)$ and $\lambda_2 \in H^{-\frac{1}{2}}(\Gamma)$ such that for all $v \in H^1(\Omega_1)$ and $\zeta \in H^{-\frac{1}{2}}(\Gamma)$},
+\begin{subequations}
 \label{eq:standard_fem_bem}
- \left\{
- \begin{array}{rcl}
- \left(  \epsilon_1 \nabla \phi_1, \nabla v \right)_{\Omega_1}  - \left< \epsilon_1 \lambda_2, v \right>_\Gamma &=&   \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v \right)_{\Omega_1} \\[3mm] 
-  \left< \left(\tfrac{1}{2} I - K_{Y}^{\Gamma}\right) \gamma \phi_1, \zeta \right>_\Gamma + \tfrac{\epsilon_1}{\epsilon_2} \left< V_{Y}^{\Gamma} \lambda_2, \zeta \right>_\Gamma &=&0.
-  \end{array}
-  \right.
-\end{equation}
-\end{center}
+\begin{align} 
+ \left\langle  \epsilon_1 \nabla \phi_1, \nabla v \right\rangle_{\Omega_1}  - \left\langle \epsilon_1 \lambda_2, v \right\rangle_\Gamma &=   \left\langle  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v \right\rangle_{\Omega_1}, \\[3mm] 
+  \left\langle \left\langle\tfrac{1}{2} I - K_{Y}^{\Gamma}\right) \gamma \phi_1, \zeta \right\rangle_\Gamma + \tfrac{1}{\epsilon_2} \left\langle V_{Y}^{\Gamma}\epsilon_1\lambda_2, \zeta \right\rangle_\Gamma &=0.
+\end{align}
+\end{subequations}
+Note that in the case where $\epsilon_1$ is constant, then each $\epsilon_1$ can be moved outside of the inner product it is inside.
 
 
 %\begin{align}\label{eq:standard_fem_bem}
 % \int_{\Omega_1} \epsilon_1 \nabla \phi_1 : \nabla v ~d\mathbf{x}  - \oint_\Gamma \epsilon_1\partial_n \phi_1 v ds &=   \int_{\Omega_1}  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k)  v ~d\mathbf{x} \\
-% \oint_\Gamma \tfrac{\phi_1}{2} - K_{Y}^{\Gamma}(\phi_1) + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left( \lambda_2^1 \right) & = 0
+% \oint_\Gamma \tfrac{\phi_1}{2} - K_{Y}^{\Gamma}(\phi_1) + \tfrac{\epsilon_1}{\epsilon_2}V_{Y}^{\Gamma} \left\langle \lambda_2^1 \right) & = 0
 %\end{align}
 
-This can also be written in matrix form. Let $\vec{\phi}_1 := [\phi_1^1, \dots, \phi_1^j]^T$ be the vector of canonical basis
-functions of the finite element space $V_{h}^{j}$, %$\vec{\phi}_2 := [\phi_2^1, \dots, \phi_2^k]^T$ - the vector of canonical basis functions of $W_{h}^{k}$,  
-$\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ --- the vector of canonical basis
-functions of $\Lambda_{h}^{l}$. % and $\vec{\widetilde{\phi}} := [\widetilde{\phi}^1, \dots, \widetilde{\phi}^m]^T$ be the vector of canonical basis functions of  $M_{h}^{m}$
+When discretised, this can also be written in matrix form. Let $\vec{\phi}_1 := [\phi_1^1, \dots, \phi_1^j]^T$ be the vector of canonical basis
+functions of the finite element space $V_{h}^{j}\subset H^1(\Omega_1)$, %$\vec{\phi}_2 := [\phi_2^1, \dots, \phi_2^k]^T$ - the vector of canonical basis functions of $W_{h}^{k}$,  
+and let $\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ be the vector of canonical basis
+functions of $\Lambda_{h}^{l}\subset H^{-\frac{1}{2}}(\Gamma)$. % and $\vec{\widetilde{\phi}} := [\widetilde{\phi}^1, \dots, \widetilde{\phi}^m]^T$ be the vector of canonical basis functions of  $M_{h}^{m}$
 % $T:\Omega_1 \rightarrow \Gamma$ and $E:\Gamma \rightarrow \Omega_1$ trace and extendable operators respectively.
-We define the following matrices associated with the corresponding bilinear forms
+We define the following matrices associated with the corresponding sesquilinear forms
 \begin{align*}
-A_{\alpha \beta} = \left(\nabla \phi_1^{\alpha}, \nabla \phi_1^{\beta} \right)_{\Omega_1}  
-&,&
-M_{\alpha \beta} = \left< \widetilde{\phi}^{\alpha}, \ \lambda^{\beta}_2 \right>_{\Gamma}, \\
-K_{\alpha \beta} = \left<K_{Y}^{\Gamma} \gamma \phi^{\alpha}_1, \ \lambda^{\beta}_2 \right>_{\Gamma}
- &,&
-V_{\alpha \beta} = \left<V_{Y}^{\Gamma} \lambda^{\alpha}_2, \ \lambda^{\beta}_2 \right>_{\Gamma}, 
+A_{\alpha \beta} &= \left\langle\epsilon_1\nabla\phi_1^{\alpha}, \nabla \phi_1^{\beta} \right\rangle_{\Omega_1},&
+M_{\alpha \beta} &= \left\langle \epsilon_1\lambda^{\beta}_2,\phi_1^{\alpha}\right\rangle_{\Gamma},\\
+K_{\alpha \beta} &= \left\langle K_{Y}^{\Gamma} \gamma \phi^{\alpha}_1, \lambda^{\beta}_2 \right\rangle_{\Gamma},&
+V_{\alpha \beta} &= \left\langle V_{Y}^{\Gamma} \epsilon_1\lambda^{\alpha}_2, \lambda^{\beta}_2 \right\rangle_{\Gamma},\\
+I_{\alpha \beta} &= \left\langle \gamma \phi^{\alpha}_1, \lambda^{\beta}_2 \right\rangle_{\Gamma},
 \end{align*}
+\mscomment{As $I$ is not equal to the identity matrix, we should maybe change the letter we use? I'd usually change it to $M$ but we've also already used that}
 and vector associated with the corresponding linear form
 \begin{equation*}
-\vec{f}_{\beta} := \left(  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  \phi_1^{\beta} \right)_{\Omega_1}.
+\vec{f}_{\beta} := \left\langle  \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  \phi_1^{\beta} \right\rangle_{\Omega_1}.
 \end{equation*}
-Using the above definition the discrete problem in Eq.~\eqref{eq:standard_fem_bem} can be written in the following matrix form
+Using the above definitions, the discrete problem in \eqref{eq:standard_fem_bem} can be written in the following blocked matrix form:
 \begin{align}\label{eq:fembem_matrix}
 \begin{bmatrix}
-\epsilon_1 A &  - \epsilon_1 M^T \\  
-\left(\tfrac12 I - K \right) \gamma &  \tfrac{\epsilon_1}{\epsilon_2} V 
+A & -M^T \\  
+\left(\tfrac12 I - K \right) \gamma &  \tfrac{1}{\epsilon_2} V 
 \end{bmatrix}
 \begin{bmatrix}
 \vec{\phi}_1 \\  

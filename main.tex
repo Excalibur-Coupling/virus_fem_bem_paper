@@ -21,9 +21,12 @@
 \usepackage{hyperref}
 
 
+\newcommand{\mscomment}[1]{\textbf{\color{red}[Matthew: #1]}}
+
+
 \definecolor{background-color}{gray}{0.98}
 
-\title{Coupling finite and boundary element methods to solve the Poisson-Boltzmann equation for electrostatics in molecular solvation}
+\title{Coupling finite and boundary element methods to solve the Poisson--Boltzmann equation for electrostatics in molecular solvation}
 \author{Micha\l{} Bosy\thanks{School of Computer Science and Mathematics, Kingston University London, Penrhyn Road, Kingston upon Thames, KT1 2EE, UK}, 
     Matthew W. Scroggs\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, 
     Timo Betcke\footnotemark[2],~\\%\thanks{Department of Mathematics, University College London, 25 Gordon Street, WC1H 0AY London, UK}, 
@@ -36,11 +39,11 @@
 
 
 \begin{abstract}
-The Poisson-Boltzmann equation is widely used to model electrostatics in molecular systems. Available software packages solve it using finite difference, finite element, and boundary element methods, where the latter is attractive due to the accurate representation of the molecular surface and partial charges, and exact enforcement of the boundary conditions at infinity. However, the boundary element method is limited to linear equations and piece-wise constant variations of the material properties. In this work, we present a scheme that couples finite and boundary elements for the Poisson-Boltzmann equation, where the finite element method is applied in a confined {\it solute} region, and the boundary element method in the external {\it solvent} region. As a proof-of-concept exercise, we used the simplest methods available: Johnson-N\'ed\'elec coupling with mass matrix and diagonal preconditioning, implemented in the Bempp-cl and FEniCSx libraries from a simple Python interface. We showcased our implementation by computing the polar component of the solvation free energy of a set of molecules using a constant and a Gaussian-varying permittivity. First, we validated our implementation against the finite difference code APBS (to 0.5\%), and then, we show scaling from protein G B1 (955 atoms) up to immunoglobulin G (20 148 atoms). For small problems we saw that the coupled method was efficient, outperforming a purely boundary integral approach, but scaled worse with size. For Gaussian-varying permittivities, which are beyond the applicability of boundary elements, we were able to run medium to large problems on a single workstation. However, our results illustrate the need to improve conditioning and incorporate distributed memory parallelism as we aim at larger systems. We hope this work will serve as inspiration for future developments that consider space-varying field parameters, and mixed linear-nonlinear schemes for molecular electrostatics with implicit solvent models. 
+The Poisson--Boltzmann equation is widely used to model electrostatics in molecular systems. Available software packages solve it using finite difference, finite element, and boundary element methods, where the latter is attractive due to the accurate representation of the molecular surface and partial charges, and exact enforcement of the boundary conditions at infinity. However, the boundary element method is limited to linear equations and piecewise constant variations of the material properties. In this work, we present a scheme that couples finite and boundary elements for the Poisson--Boltzmann equation, where the finite element method is applied in a confined {\it solute} region, and the boundary element method in the external {\it solvent} region. As a proof-of-concept exercise, we use the simplest methods available: Johnson--N\'ed\'elec coupling with mass matrix and diagonal preconditioning, implemented using the Bempp-cl and FEniCSx libraries via their Python interfaces. We showcase our implementation by computing the polar component of the solvation free energy of a set of molecules using a constant and a Gaussian-varying permittivity. We validate our implementation against the finite difference code APBS (to 0.5\%), and show scaling from protein G B1 (955 atoms) up to immunoglobulin G (20\,148 atoms). For small problems, the coupled method was efficient, outperforming a purely boundary integral approach. For Gaussian-varying permittivities, which are beyond the applicability of boundary elements alone, we were able to run medium to large sized problems on a single workstation. Development of better preconditioning techniques and the use of distributed memory parallelism for larger systems remains an area for future work. We hope this work will serve as inspiration for future developments that consider space-varying field parameters, and mixed linear-nonlinear schemes for molecular electrostatics with implicit solvent models. 
 \end{abstract}
 
 \begin{wileykeywords}
-Finite element method, Boundary element method, Poisson-Boltzmann, Implicit solvent model, Electrostatics.
+Finite element method, Boundary element method, Poisson--Boltzmann, Implicit solvent model, Electrostatics.
 \end{wileykeywords}
 
 \clearpage
@@ -56,13 +59,13 @@ Finite element method, Boundary element method, Poisson-Boltzmann, Implicit solv
 \includegraphics[width=50mm,height=50mm]{graphical_abstract_fem-bem.png} %Pick only one of the two styles by uncommenting the corresponding \includegraphics
 %\includegraphics[width=110mm,height=20mm]{cc.eps}
 \\
-    The boundary element method is a popular numerical algorithm to solve the Poisson-Boltzmann equation for molecular electrostatics. However, this technique is limited to linear equations and piece-wise constant variations of the field parameters. Here, we overcome such limitations by coupling it with a finite element method, implemented using the Bempp-cl and FEniCSx libraries through simple Python interfaces. This results in an efficient, accurate, flexible, and easy-to-use computational tool for model development. 
+    The boundary element method is a popular numerical algorithm to solve the Poisson--Boltzmann equation for molecular electrostatics. However, this technique is limited to linear equations and piecewise constant variations of the field parameters. Here, we overcome such limitations by coupling it with a finite element method, implemented using the Bempp-cl and FEniCSx libraries via their Python interfaces. This results in an efficient, accurate, flexible, and easy-to-use computational tool for model development. 
 \end{minipage}
 }}
 \end{figure}
 
 % makes references listed with 1., 2., etc.  
-  \makeatletter
+0  \makeatletter
   \renewcommand\@biblabel[1]{#1.}
   \makeatother
 
