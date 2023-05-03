@@ -23,6 +23,6 @@ To the best of our knowledge, this is the first time finite and boundary element
 
 In this paper, we prototype this principle with the simplest implementation possible: a Johnson--N\'ed\'elec\cite{johnson1980coupling} coupling, where we solve using mass-matrix and diagonal preconditioning and whithout distributed memory execution.
 This limits the size of problems we can access currently, however, it sets the basis for future developments that use more elaborate formulations and algorithms that are readily available in open source software libraries.
-In this work, we use the boundary element library Bempp-cl\cite{BetckeScroggs2021} and the finite element library FEniCSx\cite{BasixJoss,BasixDofTransformations,FEniCS}.
+In this work, we use the boundary element library Bempp-cl\cite{BetckeScroggs2021} and the finite element library FEniCSx\cite{BasixJoss,BasixDofTransformations}.
 These libraries are easy to use and their full functionalities may be accessed via their Python interfaces, making them ideal tools for easily implementing problems like this as well as for exploring computational efficiency and moving towards tackling large-scale problems, such as a full viral capsid.\cite{MartinezETal2019,wang2021high}
 We hope this work will inspire research along these lines.
