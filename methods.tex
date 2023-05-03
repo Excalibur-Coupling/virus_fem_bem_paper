@@ -198,7 +198,7 @@ We start with the variational formulation of the internal problem. Applying inte
  \left\langle \epsilon_1 \nabla \phi_1, \nabla v \right\rangle_{\Omega_1}  -  \left\langle  \epsilon_1\partial_n \phi_1, v \right\rangle_\Gamma =  \left\langle \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v\right\rangle_{\Omega_1},
 \end{equation}
 %
-where $v$ is a test function, and $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})\overline{v(\mathbf{x})}\,\mathrm{d}\mathbf{x}$ and $\left\langle\varphi,v\right\rangle_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})\overline{v(\mathbf{x})}\,\mathrm{d}\mathbf{x}$ are the inner products on the surface and in the domain, respectively.
+where $v$ is a test function, and $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ and $\left\langle\varphi,v\right\rangle_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ are the inner products on the surface and in the domain, respectively.
 For the external problem with BEM, we define the Dirichlet trace~\cite{MR2361676} 
 \begin{align*}
 % \label{eq:trace_map}
@@ -248,7 +248,7 @@ functions of the finite element space $V_{h}^{j}\subset H^1(\Omega_1)$, %$\vec{\
 and let $\vec{\lambda}_2 := [\lambda_2^1, \dots, \lambda_2^l]^T$ be the vector of canonical basis
 functions of $\Lambda_{h}^{l}\subset H^{-\frac{1}{2}}(\Gamma)$. % and $\vec{\widetilde{\phi}} := [\widetilde{\phi}^1, \dots, \widetilde{\phi}^m]^T$ be the vector of canonical basis functions of  $M_{h}^{m}$
 % $T:\Omega_1 \rightarrow \Gamma$ and $E:\Gamma \rightarrow \Omega_1$ trace and extendable operators respectively.
-We define the following matrices associated with the corresponding sesquilinear forms
+We define the following matrices associated with the corresponding bilinear forms
 \begin{align*}
 A_{\alpha \beta} &= \left\langle\epsilon_1\nabla\phi_1^{\alpha}, \nabla \phi_1^{\beta} \right\rangle_{\Omega_1},&
 M_{\alpha \beta} &= \left\langle \epsilon_1\lambda^{\beta}_2,\phi_1^{\alpha}\right\rangle_{\Gamma},\\
