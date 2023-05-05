@@ -15,7 +15,7 @@ For very large grid sizes the user can enable fast multipole method (FMM) assemb
 To couple FEniCSx with Bempp-cl we load a volume mesh with FEniCSx. We then export the corresponding boundary mesh into Bempp-cl and assemble the boundary spaces there. Bempp-cl provides numerical trace operators that can translate from the degree of freedom (DOF) representation in FEniCSx to the DOF representation in Bempp-cl. The corresponding translation work is handled opaquely and the user only needs to deal with high-level interfaces of FEniCSx operators, Bempp-cl operators, and trace operators. FMM assembly fits automatically into this framework and can be enabled or disabled as a simple configuration option.
 Once the discrete block matrices in Eq.~\eqref{eq:fembem_matrix} are built with Bempp-cl and FEniCSx, we assemble them into one matrix and solve the linear system with Scipy's\cite{2020SciPy-NMeth} GMRES, in this case, with a tolerance of $10^{-5}$.
 
-Docker images containing FEniCSx, Bempp-cl, and Exafmm-t are publicly available (\href{https://bempp.com/installation.html}{https://bempp.com/installation.html}), and all codes used to generate the results in this section are available as Jupyter Notebooks that can be reproducibly executed in an appropriate environment. The results in this section were obtained using version 0.6.0 of FEniCSx and version 0.3.0 of Bempp-cl. All codes to reproduce the results of this manuscript can be found in the GitHub repository \url{https://github.com/MichalBosy/FEM_BEM_coupling/}.
+Docker images containing FEniCSx, Bempp-cl, and Exafmm-t are publicly available ( \url{https://bempp.com/installation.html}), and all codes used to generate the results in this section are available as Jupyter Notebooks that can be reproducibly executed in an appropriate environment. The results in this section were obtained using version 0.6.0 of FEniCSx and version 0.3.0 of Bempp-cl. All codes to reproduce the results of this manuscript can be found in the GitHub repository \url{https://github.com/MichalBosy/FEM_BEM_coupling/}.
 
 
 \section*{\sffamily \Large Results with constant permitivitty}
@@ -169,8 +169,8 @@ Molecule & \parbox{1.1cm}{\centering FEM DOFs}  & \parbox{1.1cm}{\centering BEM 
 % \hline
   1pgb  & $29\,434$ &  $10\,058$ &  $-300.888$ & $703$ & $86$ & $472$ & $0.67$ & $789$  \\
  1lyz  & $56\,114$ & $18\,606$ &  $-599.310$ & $1\,073$ & $336$ & $1\,350$  & $1.26$ & $1\,686$   \\
- 1x1u & $263\,181$ & $81\,258$ & $-1\,982.085$ & $2\,7914$ & $8\,340$ & $11\,000$ & $3.94$ & $19\,340$  \\
- 1igt & $597\,575$ & $187\,712$ &  $-3\,294.0157$ & $5 366$ & $41\,998$ & $40\,100$ &  $7.47$ & $82\,098$    \\
+ 1x1u & $263\,181$ & $81\,258$ & $-1\,982.085$ & $2\,791$ & $8\,340$ & $11\,000$ & $3.94$ & $19\,340$  \\
+ 1igt & $597\,575$ & $187\,712$ &  $-3\,294.0157$ & $5\, 366$ & $41\,998$ & $40\,100$ &  $7.47$ & $82\,098$    \\
 \end{tabular}
 \caption{Results for larger structures with a variable permittivity.}
 \label{table:large_variable}
