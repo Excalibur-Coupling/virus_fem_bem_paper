@@ -79,13 +79,13 @@ the FEM-BEM approach viable for large problems.
 
 \subsection*{\sffamily \large Note on modeling differences between finite difference and finite/boundary element methods}
 
-To facilitate verification, we conducted a comparative analysis between our FEM-BEM approach and established Poisson-Boltzmann solvers, including APBS,\cite{BakerETal2001} MIBPB,\cite{geng2007treatment} CPB,\cite{boschitsch2011fast} PBSA,\cite{XX}, and Delphi.\cite{rocchia2001extending} 
-These benchmarks primarily employ finite difference approximations, setting the stage for inherent modeling disparities with respect to our FEM-BEM method, making this comparison a difficult task.
-Firstly, it naturally enforces the decay of the electrostatic potential to zero at infinity in the exterior domain through the boundary integral formulation, while finite difference-based solvers necessitate the imposition of effective boundary conditions along the mesh periphery. 
+To facilitate verification, we conducted a comparative analysis between our FEM-BEM approach and established Poisson-Boltzmann solvers, including APBS,\cite{BakerETal2001} MIBPB,\cite{geng2007treatment,chen2011mibpb} CPB,\cite{boschitsch2011fast} PBSA,\cite{wang2008poisson,cai2010performance} and Delphi.\cite{rocchia2001extending} 
+These benchmarks primarily employ finite difference approximations, setting the stage for inherent modeling disparities with respect to our FEM-BEM method, and making this comparison a difficult task.
+Firstly, the boundary integral formulation in the external domain naturally enforces the decay of the electrostatic potential to zero at infinity, while finite difference-based solvers necessitate the imposition of effective boundary conditions along the mesh periphery. 
 This boundary condition critically influences the electrostatic potential and may deviate from the true solution if the size of the mesh box is insufficient. 
-Secondly, the definition of the molecular surface differs slightly across software. Our FEM-BEM approach employs a triangulation of the solvent-excluded surface, ensuring exact enforcement of interface conditions. 
-In contrast, finite difference meshes inherently produce a staircase representation of this surface. 
-While the matched interface technique in MIBPB\cite{geng2007treatment} addresses this discrepancy, it does not fully align with our triangulation-based molecular surface representation.
+Secondly, the definition of the molecular surface differs slightly across software, resulting in different domain geomteries. 
+Our FEM-BEM approach employs a triangulation of the solvent-excluded surface (based on NanoShaper\cite{decherchi2013general}), while finite difference meshes produce a staircase representation of this surface. 
+This discrepancy is addressed by the matched interface technique in MIBPB,\cite{geng2007treatment,chen2011mibpb} however, the resulting surface does not exactly match NanoShaper's triangulation. 
 
 
 \subsection*{\sffamily \large Binding energy calculations for a large data set}
@@ -97,20 +97,21 @@ The binding energy of two molecules in a complex is
 \end{equation}
 %
 where $\Delta G_{solv, complex}$ is the solvation energy of the complex, $\Delta G_{solv, 1}$ and $\Delta G_{solv, 2}$ are the solvation energies of the two compounds, and $\Delta G_{coul}$ is the difference in Coulomb energy between bound and unbound states.
-This calculation presents a major challenge, as small errors in solvation energy may result in large errors in binding energy, making accuracy crucial.
+This calculation presents a major challenge, as small errors in solvation energy may have a large impact result in in binding energy, making accuracy crucial.
 
-Folllowing the data set proposed by Fenley and co-workers,\cite{HarrisBoschitcshFenley2013} available in \url{http://www.sb.fsu.edu/~mfenley/convergence/downloads/convergence_pqr_sets.tar.gz}, and later used by Wei {\it et al.}\cite{} to assess the accuracy of different Poisson-Boltzmann solvers, we performed a comparison with binding energies computed using our method. 
+Folllowing the data set proposed by Fenley and co-workers,\cite{HarrisBoschitcshFenley2013} available in \url{http://www.sb.fsu.edu/~mfenley/convergence/downloads/convergence_pqr_sets.tar.gz}, and later used by Wei {\it et al.}\cite{nguyen2017accurate} to assess the accuracy of different Poisson-Boltzmann solvers, we tested our method by computing binding energies. 
 We first performed a mesh refinement study with the structure of 1biv, available in that same data set, to decide on an appropriate mesh density.
-Table XX shows that finite element grids generated from a surface mesh with 12, 17 and 24 vertices per \AA$^2$ are within the convergence region ({\it ie.} the observed order of convergence agrees with the theoretical order of the method).\cite{Roache1998,CooperBardhanBarba2014}
-In all cases, we used TetGen with a quality parameter of 1.1.
+Table XX shows that finite element grids generated from a surface mesh with 12, 17 and 24 vertices per \AA$^2$, and a quality parameter of 1.1 in TetGen, are within the convergence region ({\it ie.} the observed order of convergence agrees with the theoretical order of the method).\cite{roache1998verification,CooperBardhanBarba2014}
 From this result, we performed Richardson extrapolation to get an approximate true solution, and found that the mesh with 24 vertices per \AA$^2$ was XX\% away, which we chose for the remaining of this test.
 
-Even though we used a constant permittivity inside the molecular region, in several cases there were voids where a water molecule fits. 
+Several structure in the data base contained voids inside the molecular region where a water molecule fits. 
 In a finite difference description, these voids are naturally considered as pockets of solvent, with the permittivity of water ($\epsilon=\epsilon_2$).
-Regardless if this is an appropriate physical model, we also considered cavities that way for comparison purposes.
-This meant that had to detect the cavities and use a piece-wise constant description of the permittivity inside the molecular region, further supporting the applicability of FEM in this domain.
+Regardless if this is an appropriate physical model, we also placed the permittivity of bulk water inside cavities for comparison purposes.
+In the FEM formalism, we had to detect the elements contained by cavities and use a piece-wise constant varying description of the permittivity inside the molecular region, which can be done without any modification in the formulation. 
+A BEM-BEM formulation can also account for cavities this way,\cite{AltmanBardhanWhiteTidor09,CooperBardhanBarba2014} but involves certain adjustments in the stiffness matrix.
 
-Figures \ref{fig:dna_drug,fig:barnase_barstar,fig:rna_peptide} show the binding energies of structures of a DNA-drug complex, the barnase-barstar complex, and a RNA-peptide complex, respectively, presented in Fenley's data set.\cite{HarrisBoschitcshFenley2013} The data for CPB\cite{HarrisBoschitcshFenley2013} and MIBPB, Delphi, APBS and PBSA where taken from the literature,\cite{Nguyen} for the finest mesh reported. From Figures \ref{fig:dna_drug,fig:barnase_barstar,fig:rna_peptide} it is evident that our FEM-BEM approach gives results that are within the range of the other software.
+Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} show the binding energies of structures of a DNA-drug complex, the barnase-barstar complex, and a RNA-peptide complex, respectively, presented in Fenley's data set.\cite{HarrisBoschitcshFenley2013} The data for CPB\cite{HarrisBoschitcshFenley2013} and MIBPB, Delphi, APBS and PBSA where taken from the literature,\cite{nguyen2017accurate} for the finest mesh reported. 
+From Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} it is evident that our FEM-BEM approach gives results that are within the range of the other software.
 
 \begin{figure}
 \centering
@@ -134,7 +135,7 @@ Figures \ref{fig:dna_drug,fig:barnase_barstar,fig:rna_peptide} show the binding 
 \end{figure}
 
 
-\subsection*{\sffamily \large Motivation: modeling the solute with a Gaussian-based variable permittivity}
+\subsection*{\sffamily \large Modeling the solute with a Gaussian-based variable permittivity}
 
 In contrast to a purely BEM approach, FEM-BEM coupling gives the flexibility to consider space-varying field parameters. 
 A popular description of the molecule is to consider a permittivity that varies like a Gaussian around each atom,\cite{grant2001smooth} which has shown enhanced accuracy in some applications, like pKa calculations.\cite{li2013dielectric}
@@ -154,7 +155,7 @@ As $\epsilon$ is variable, Equation \eqref{eq:phic} does not have a known analyt
 For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, but the solvent permittivity was set to $\epsilon_2=2$. 
 Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
 
-\subsection*{\sffamily \large Convergence for arginine with APBS}
+\subsubsection*{\sffamily \normalsize Convergence for arginine with APBS}
 
 We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
 We chose APBS because it provides an easy interface to control dielectric maps to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
