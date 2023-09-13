@@ -1,6 +1,6 @@
 \subsection*{\sffamily \large The implicit solvent model}
 
-The implicit solvent model\cite{RouxSimonson1999,DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson--Boltzmann equation governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson equation govnerns in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous across the surface.
+The implicit solvent model\cite{RouxSimonson1999, DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson--Boltzmann equation governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson equation governs in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous across the surface.
 %
 \begin{subequations}
 \label{eq:pbe}
@@ -28,9 +28,9 @@ The electrostatic potential in $\Omega_1$ can be further decomposed into singula
 \phi_c(\mathbf{x})&=0 &&\text{ as } |\mathbf{x}|\to\infty.
 \end{align}
 Physically, $\phi_c$ can be interpreted as the Coulomb-type potential from the point charges, whereas $\phi_r$, also known as reaction potential, is originated by the polarization of the solvent and reorganization of the free ions. 
-Usually, $\epsilon_1$ is considered a constant value, yielding an analytical expression for $\phi_c$. However, this is not the general case.
+Usually, $\epsilon_1$ is considered a constant value, yielding an analytic expression for $\phi_c$. However, this is not the general case.
 
-Regularized versions of the equations in \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008,LeeGengZhao2021} are widely used to numerically solve the Poisson--Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permittivities in the solute.\cite{wang2022regularization} However, here we use the standard formulation in \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permittivities, beyond super-Gaussian descriptions.
+Regularized versions of the equations in \eqref{eq:pbe} \cite{LuZhouHolstMcCammon2008, LeeGengZhao2021} are widely used to numerically solve the Poisson--Boltzmann equation with finite element or finite difference methods, and have recently been extended to super-Gaussian permittivities in the solute.\cite{wang2022regularization} However, here we use the standard formulation in \eqref{eq:pbe}, as it offers more flexibility when dealing with, for example, variable permittivities, beyond super-Gaussian descriptions.
 
 A common quantity of interest in implicit solvent models is the solvation free energy, which is the change in Gibbs free energy as the molecule moves from the vacuum into the solvent. Considering the charge distribution $\rho$ consists of point charges, this can be calculated as
 %
@@ -40,7 +40,7 @@ A common quantity of interest in implicit solvent models is the solvation free e
 
 \subsection*{\sffamily \large BEM-BEM coupling}
 
-Several possible boundary integral formulations of \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon and Lenhoff in 1991\cite{YoonLenhoff1990} and is known as the \emph{direct formulation}. However, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006,LuETal2009,debuhr2016dashmm} which reads
+Several possible boundary integral formulations of \eqref{eq:pbe} exist.~\cite{search2022towards} The simplest form was presented by Yoon and Lenhoff in 1991\cite{YoonLenhoff1990} and is known as the \emph{direct formulation}. However, the resulting system is usually ill-conditioned. Here, we use the better-conditioned formulation presented by Lu and co-workers,~\cite{LuETal2006, LuETal2009,debuhr2016dashmm} which reads
 %
 \begin{align}\label{eq:lu}
     \tfrac{\phi_2}{2}\left(1+\tfrac{\epsilon_1}{\epsilon_2}\right) - \left(K_Y^\Gamma - \tfrac{\epsilon_1}{\epsilon_2}K_L^\Gamma\right)\phi_2 + \left(V_Y^\Gamma - V_L^\Gamma\right)\lambda_2 &= \sum_{k=0}^{N_q}  \frac{q_k}{4\pi\epsilon_2|\mathbf{x}_{\Gamma} - \mathbf{x}_k|},
@@ -198,7 +198,7 @@ We start with the variational formulation of the internal problem. Applying inte
  \left\langle \epsilon_1 \nabla \phi_1, \nabla v \right\rangle_{\Omega_1}  -  \left\langle  \epsilon_1\partial_n \phi_1, v \right\rangle_\Gamma =  \left\langle \sum_{k=1}^{N_q} q_k\delta(\mathbf{x},\mathbf{x}_k),  v\right\rangle_{\Omega_1},
 \end{equation}
 %
-where $v$ is a test function, and $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ and $\left\langle\varphi,v\right\rangle_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ are the inner products on the surface and in the domain, respectively. Slightly abusing notation, the product $\left\langle \cdot, \cdot \right\rangle_{\Omega_1}$ on the right-hand side denotes the duality paring.
+where $v$ is a test function, and $\left\langle\varphi,v\right\rangle_\Gamma = \int_\Gamma \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ and $\left\langle\varphi,v\right\rangle_{\Omega_1} = \int_{\Omega_1} \varphi(\mathbf{x})v(\mathbf{x})\,\mathrm{d}\mathbf{x}$ are the inner products on the surface and in the domain, respectively. Slightly abusing notation, the product $\left\langle \cdot, \cdot \right\rangle_{\Omega_1}$ on the right-hand side denotes the duality pairing.
 For the external problem with BEM, we define the Dirichlet trace~\cite{MR2361676} 
 \begin{align*}
 % \label{eq:trace_map}

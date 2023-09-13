@@ -1,5 +1,5 @@
-This section presents the verification and performance results of the presented FEM-BEM coupling schemes for molecules modeled as cavities with constant and varying permittivity.
-With a constant permittivity inside the molecule, we tested convergence against an analytical expression of the solvation energy of a sphere \cite{Kirkwood1934}, and then compared a more realistic geometry (arginine) with a purely BEM implementation.
+This section presents the verification and performance results of the presented FEM-BEM coupling schemes for molecules modelled as cavities with constant and varying permittivity.
+With a constant permittivity inside the molecule, we tested convergence against an analytic expression of the solvation energy of a sphere \cite{Kirkwood1934}, and then compared a more realistic geometry (arginine) with a purely BEM implementation.
 We also considered a Gaussian-varying permittivity\cite{grant2001smooth,li2013dielectric} inside the molecular cavity of arginine, and used APBS \cite{BakerETal2001} to verify our results.
 The final tests show the scaling of the FEM-BEM coupling as the molecule size grows. 
 
@@ -7,7 +7,7 @@ All runs were done on a Lenovo ThinkStation P620 with AMD Ryzen ThreadRipper PRO
 
 \section*{\sffamily \Large Software environment}
 
-For the finite element computations, we use the software package FEniCSx~\cite{BasixJoss,BasixDofTransformations} while for the boundary element computations, we use Bempp-cl~\cite{BetckeScroggs2021} together with Exafmm-t~\cite{exafmm-t}. FEniCSx is the successor of the widely used FEniCS finite element library\cite{FEniCS,FEniCS-book}.
+For the finite element computations, we use the software package FEniCSx~\cite{BasixJoss, BasixDofTransformations} while for the boundary element computations, we use Bempp-cl~\cite{BetckeScroggs2021} together with Exafmm-t~\cite{exafmm-t}. FEniCSx is the successor of the widely used FEniCS finite element library\cite{FEniCS, FEniCS-book}.
 It provides a convenient Python interface, describing problems using Unified Form Language (UFL)~\cite{UFL}, a convenient domain-specific language specifically designed for finite element discretisations of partial differential equations. During assembly, the UFL description is transformed into efficient low-level C++ code and just-in-time compiled~\cite{ffc1,ffc2}. Bempp-cl is a Python package that uses low-level OpenCL kernels written in C99 to provide optimised assembly routines~\cite{2021-cise}. The built-in dense assembly routines are highly efficient for moderate discretisation sizes up to a few ten thousand elements.
 
 For very large grid sizes the user can enable fast multipole method (FMM) assembly which internally is handled in Bempp-cl through an interface to the Exafmm-t FMM library. For $N$ surface elements this reduces the memory and computational complexity from $\mathcal{O}(N^2)$ in the dense assembly case to $\mathcal{O}(N)$ in the FMM case, making large boundary element problems tractable on standard workstations. In this work, we only use the FMM in the performance analysis for larger structures, as all other cases are small enough to run efficiently with a dense assembler. 
@@ -22,13 +22,13 @@ Docker images containing FEniCSx, Bempp-cl, and Exafmm-t are publicly available 
 
 In implicit-solvent models, the molecule is usually considered as a region with constant permittivity: in our computations, we use $\epsilon_1=2$.
 In the solvent region, we used the permittivity of water ($\epsilon_2=80$) and an inverse of the Debye length of $\kappa=0.125\,\text{\AA}^{-1}$.
-In this case, there is a known analytical solution for $\phi_c$ in Eq.~\eqref{eq:phic}, so it is enough to compute $\phi_r$. We do this using Eq.~\eqref{eq:phi_reac} with both BEM-BEM and FEM-BEM coupling approaches. For FEM-BEM, the integral over $\Gamma$ in Eq.~\eqref{eq:phi_reac} corresponds to the trace of the solution vector from Eq.~\eqref{eq:fembem_matrix}.
+In this case, there is a known analytic solution for $\phi_c$ in Eq.~\eqref{eq:phic}, so it is enough to compute $\phi_r$. We do this using Eq.~\eqref{eq:phi_reac} with both BEM-BEM and FEM-BEM coupling approaches. For FEM-BEM, the integral over $\Gamma$ in Eq.~\eqref{eq:phi_reac} corresponds to the trace of the solution vector from Eq.~\eqref{eq:fembem_matrix}.
 
 \subsection*{\sffamily \large Convergence of a spherical cavity}
 
 The Kirkwood sphere \cite{Kirkwood1934} is a standard benchmark test for the Poisson--Boltzmann equation in molecular electrostatics. 
 In this case, we considered a spherical cavity of radius $R=2\,\text{\AA}$, with three charges ($q_1=1$, $q_2=1$, and $q_3=0.75$) placed at $\mathbf{x}_1=(1,0,0)$, $\mathbf{x}_2=(0.7,0.7,0)$, and $\mathbf{x}_3=(-0.5,-0.5,0)$.
-Figure \ref{fig:error_sphere} shows the percentage error of the FEM-BEM approach, and a reference BEM-BEM implementation, compared to the analytical solution ($\Delta G_{\text{solv}}= -336.0396\,\text{kcal/mol}$).
+Figure \ref{fig:error_sphere} shows the percentage error of the FEM-BEM approach, and a reference BEM-BEM implementation, compared to the analytic solution ($\Delta G_{\text{solv}}= -336.0396\,\text{kcal/mol}$).
 In these runs, the FEM mesh was generated using GMSH~\cite{geuzaine2009gmsh} 
 %Bempp (check?) from a surface discretization 
 with %1, 2, 4, and 8 
@@ -53,7 +53,7 @@ These densities correspond to a grid-scale parameter in Nanoshaper equal to 1.6,
 For our BEM-BEM solver, we used these meshes directly. For the FEM-BEM solver, we created volume meshes from these using pyGAMer,~\cite{lee2020open} which invoked TetGen\cite{hang2015tetgen} with a quality parameter (radius-edge ratio) of 1.0.
 
 The solvation energy computed with the two schemes is presented in Figure \ref{fig:arg_constant_energy}, which, as expected, converges to a similar answer as the mesh is refined.
-Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of the iteration count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need to use a hypersingular operator in the BEM formulation, and the fact that we are not using any acceleration method ($ie.$ FMM).
+Figure \ref{fig:arg2_constant_time_iter} compares the iteration count and time-to-solution. The left plot shows that using only BEM outperforms the coupled FEM-BEM approach in terms of the iteration count. However, if we look at the total time that solvers take to obtain the solution, we can see the advantage of using the FEM-BEM coupling. The higher computational cost is caused by the need to use a hypersingular operator in the BEM formulation, and the fact that we are not using any acceleration method (i.e. FMM).
 The timings for the FEM-BEM coupling scale are at a greater rate than the pure BEM counterpart, indicating that work on preconditioners and other acceleration methods will be required in order to make
 the FEM-BEM approach viable for large problems.
 %\textcolor{red}{Chris: I thought BEM-BEM outperformed FEM-BEM in total time. Am I wrong there?} \textcolor{blue}{Michal: Not for this formulation of BEM-BEM since we have hypersingular operator. But you can see that for denser meshes we should outperform it.} 
@@ -77,13 +77,13 @@ the FEM-BEM approach viable for large problems.
 
 \section*{\sffamily \Large Results with variable permittivity}
 
-\subsection*{\sffamily \large Note on modeling differences between finite difference and finite/boundary element methods}
+\subsection*{\sffamily \large Note on modelling differences between finite difference and finite/boundary element methods}
 
 To facilitate verification, we conducted a comparative analysis between our FEM-BEM approach and established Poisson-Boltzmann solvers, including APBS,\cite{BakerETal2001} MIBPB,\cite{geng2007treatment,chen2011mibpb} CPB,\cite{boschitsch2011fast} PBSA,\cite{wang2008poisson,cai2010performance} and Delphi.\cite{rocchia2001extending} 
-These benchmarks primarily employ finite difference approximations, setting the stage for inherent modeling disparities with respect to our FEM-BEM method, and making this comparison a difficult task.
+These benchmarks primarily employ finite difference approximations, setting the stage for inherent modelling disparities with respect to our FEM-BEM method, and making this comparison a difficult task.
 Firstly, the boundary integral formulation in the external domain naturally enforces the decay of the electrostatic potential to zero at infinity, while finite difference-based solvers necessitate the imposition of effective boundary conditions along the mesh periphery. 
 This boundary condition critically influences the electrostatic potential and may deviate from the true solution if the size of the mesh box is insufficient. 
-Secondly, the definition of the molecular surface differs slightly across software, resulting in different domain geomteries. 
+Secondly, the definition of the molecular surface differs slightly across software, resulting in different domain geometries. 
 Our FEM-BEM approach employs a triangulation of the solvent-excluded surface (based on NanoShaper\cite{decherchi2013general}), while finite difference meshes produce a staircase representation of this surface. 
 This discrepancy is addressed by the matched interface technique in MIBPB,\cite{geng2007treatment,chen2011mibpb} however, the resulting surface does not exactly match NanoShaper's triangulation. 
 
@@ -110,7 +110,7 @@ Several structures in the database contained voids inside the molecular region w
 In a finite difference description, these voids are naturally considered as pockets of solvent, with the permittivity of water ($\epsilon=\epsilon_2$).
 Regardless if this is an appropriate physical model, we also placed the permittivity of bulk water inside cavities for comparison purposes.
 In the FEM formalism, we had to detect the elements contained by cavities and use a piece-wise constant varying description of the permittivity inside the molecular region, which can be done without any modification in the formulation. 
-A BEM-BEM formulation can also account for cavities this way,\cite{AltmanBardhanWhiteTidor09,CooperBardhanBarba2014} but involves certain adjustments in the stiffness matrix.
+A BEM-BEM formulation can also account for cavities this way,\cite{AltmanBardhanWhiteTidor09, CooperBardhanBarba2014} but involves certain adjustments in the stiffness matrix.
 
 Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} show the binding energies of structures of DNA-drug complexes, barnase-barstar complexes, and RNA-peptide complexes, respectively, presented in Fenley's data set.\cite{HarrisBoschitcshFenley2013} The data for CPB\cite{HarrisBoschitcshFenley2013} and MIBPB, Delphi, APBS and PBSA were taken from the literature,\cite{nguyen2017accurate} for the finest mesh reported. 
 From Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} it is evident that our FEM-BEM approach gives results that are within the range of the other software.
@@ -153,7 +153,7 @@ where the product runs over all the atoms of the solute, $R_i$ is the van der Wa
 \epsilon := \left(1-\rho \right) \epsilon_1 + \rho\epsilon_2
 \end{equation}
 
-As $\epsilon$ is variable, Equation \eqref{eq:phic} does not have a known analytical solution, and the electrostatic potential in the vacuum state has to be computed numerically.
+As $\epsilon$ is variable, Equation \eqref{eq:phic} does not have a known analytic solution, and the electrostatic potential in the vacuum state has to be computed numerically.
 For vacuum calculations, we considered the same distribution of $\epsilon$ inside the molecule as in the solvated case, but the solvent permittivity was set to $\epsilon_2=2$. 
 Other implementations of Gaussian permittivities also modify the solute permittivity in vacuum calculations, according to a set cutoff.\cite{li2013dielectric} We did not consider a cutoff in our calculations.
 
@@ -162,7 +162,7 @@ Other implementations of Gaussian permittivities also modify the solute permitti
 We used Equation \eqref{eq:varying_eps} to generate dielectric maps, which we ran on APBS~\cite{BakerETal2001} for comparison. 
 We chose APBS because it provides an easy interface to control dielectric maps to ensure their agreement with the maps imposed in our FEM-BEM coupled approach.
 
-Table \ref{table:arg_variable} shows a comparison of the solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the solutions on the finest meshes agree to within 0.5\% (0.5 kcal/mol). The coarsest meshes used in both cases are within the recommended densities for accurate solvation energy simulations with constant permittivity: a finite difference mesh with $h=0.5\,\text{\AA}$ or less is recommended for binding energy calculations\cite{sorensen2015comprehensive} (the result of subtracting two solvation energies), and a similar study with BEM\cite{CooperBardhanBarba2014} showed that a mesh with 2 vertices per $\text{\AA}^2$ gives acceptable results when computing binding and solvation energies. We see a jump in the solvation energy for the FEM-BEM results going from 4.1 to 6.7 vertices per $\text{\AA}^2$, but later the energy monotonically decreases, converging to a solution. This is an indication that mesh requirements for variable permittivities may be tighter than with a constant permittivity, even though the jump in dielectric constant across the molecular surface is usually smaller. 
+Table \ref{table:arg_variable} shows a comparison of the solvation energy computed with APBS and our FEM-BEM coupling approach. We can see that they are both converging to equivalent values, where the solutions on the finest meshes agree to within 0.5\% (0.5 kcal/mol). The coarsest meshes used in both cases are within the recommended densities for accurate solvation energy simulations with constant permittivity: a finite difference meshes with $h=0.5\,\text{\AA}$ or less is recommended for binding energy calculations\cite{sorensen2015comprehensive} (the result of subtracting two solvation energies), and a similar study with BEM\cite{CooperBardhanBarba2014} showed that a mesh with 2 vertices per $\text{\AA}^2$ gives acceptable results when computing binding and solvation energies. We see a jump in the solvation energy for the FEM-BEM results going from 4.1 to 6.7 vertices per $\text{\AA}^2$, but later the energy monotonically decreases, converging to a solution. This is an indication that mesh requirements for variable permittivities may be tighter than with a constant permittivity, even though the jump in dielectric constant across the molecular surface is usually smaller. 
 
 %Figure \ref{fig:arg2_variable} contains the performance results of this test case, where we distinguish the iteration count from the calculation in dissolved and vacuum states. \textcolor{red}{Chris: if we don't include Fig. \ref{fig:arg2_variable}, we should remove this paragraph. I believe that if we show performance for fem-bem, a reviewer might be tempted to ask it for APBS too, which might be difficult.}  \textcolor{blue}{Michal: I completely agree. We were even talking about not putting them, but just for our information, we kept it for now. They weren't going to be in the final version}
 \begin{table}
@@ -209,10 +209,10 @@ As we increase the number of degrees of freedom (DOFs), the setup time scales sl
 On the other hand, the time per iteration scales closer to $\mathcal{O}(N)$, which is expected as we are using FMM for the BEM portion of the matrix.
 This is an indication that the high solving time is mainly due to the increase in iteration count, and having better-conditioned coupling methods, such as the so-called hybrid approach\cite{betcke2022hybrid}, or more effective preconditioners for the blocked system would have a large impact on the time to solution.
 
-Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up 30\% of the available RAM memory. 
+Even though this scheme is capable of calculating the electrostatic potential in medium-to-large proteins, the largest test case in Table \ref{table:large_variable} (1igt) used up 30\% of the available RAM. 
 %(\textcolor{red}{check and rewrite \textcolor{blue}{we are using around 50\% of memory}}). 
 If we were aiming at larger structures, such as full viruses,\cite{MartinezETal2019,wang2021high} we would require the use of optimised fast algorithms\cite{wang2021exafmm,kailasa2023pyexafmm} and
-parellelization of the storage and solver, alongside the necessary improvements in the conditioning of the system.
+parallelisation of the storage and solver, alongside the necessary improvements in the conditioning of the system.
 
 \begin{table}
 \centering

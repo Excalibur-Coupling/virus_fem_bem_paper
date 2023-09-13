@@ -1,16 +1,16 @@
 In biologically relevant settings, the structure and function of biomolecules are largely determined by the surrounding water, which usually contains salt. 
 To describe these systems accurately, we need to account for the solvent correctly, which has given rise to a wide range of models.\cite{onufriev2018water}
 Highly detailed models consider every water molecule and salt ion explicitly.
-For solutions with large numbers of molecules, however, these models can be very compuationally expensive, so implicit-solvent models---approximated models that use continuum theory to represent the ionic solution---are often used instead.\cite{RouxSimonson1999,DecherchiETal2015}
+For solutions with large numbers of molecules, however, these models can be very computationally expensive, so implicit-solvent models---approximated models that use continuum theory to represent the ionic solution---are often used instead.\cite{RouxSimonson1999,DecherchiETal2015}
 In the case of electrostatics, the implicit-solvent model is mathematically characterized by the Poisson--Boltzmann equation (PBE)\cite{Baker2004,Bardhan2012}, which is widely used to compute solvation free energies and mean-field potentials.
 
 The implicit-solvent model for electrostatics describes the dissolved molecule as an infinite medium with a low-dielectric solute-shaped cavity, which contains a charge distribution from the partial charges---usually a sum of Dirac deltas at the atom's locations.
-The outer solvent region is represented with a high dielectric constant, and considers the presence of salt.
+The outer solvent region is represented with a high dielectric constant and considers the presence of salt.
 These two regions are interfaced by the molecular surface where the continuity of the electrostatic potential and electric displacement are enforced.
 The molecular surface can be defined in various ways \cite{HarrisBoschitcshFenley2013}.
 
 
-The PBE has been solved numerically with finite difference\cite{BakerETal2001,GilsonETal1985,JurrusETal2018,LiETal2019}, finite element\cite{HolstETal2012,BondEtal2010,nakov2021argos}, boundary element\cite{boschitsch2002fast,LuETal2006,AltmanBardhanWhiteTidor09,bajaj2011efficient,GengKrasny2013,CooperBardhanBarba2014}, and analytical\cite{YapHeadgordon2010,FelbergETal2017} methods.
+The PBE has been solved numerically with finite difference\cite{BakerETal2001,GilsonETal1985,JurrusETal2018,LiETal2019}, finite element\cite{HolstETal2012,BondEtal2010,nakov2021argos}, boundary element\cite{boschitsch2002fast,LuETal2006,AltmanBardhanWhiteTidor09,bajaj2011efficient,GengKrasny2013,CooperBardhanBarba2014}, and analytic\cite{YapHeadgordon2010,FelbergETal2017} methods.
 In particular, the boundary element method (BEM) has proven to be very efficient for high-accuracy calculations \cite{GengKrasny2013,CooperBardhanBarba2014}, mainly due to the precise description of the molecular surface and point charges. 
 However, BEM is limited to constant material properties in each region and the linear version of the PBE. 
 Even though these limitations are acceptable in a wide range of applications, there are cases when BEM falls short: for example, if a variable permittivity is required inside the solute \cite{grant2001smooth,li2013dielectric}, or the solute is highly charged such that the linear approximation breaks\cite{FogolariETal1999}.
@@ -18,11 +18,11 @@ Even though these limitations are acceptable in a wide range of applications, th
 The present article describes a methodology to overcome some of those limitations, by coupling finite and boundary element methods.
 This approach brings the best of both worlds---the flexibility of FEM and the efficiency of BEM---all in an accurate description of the solute molecule.
 FEM-BEM coupling is a popular technique in the context of mixed linear-nonlinear models,\cite{carstensen1995coupling,aurada2013classical} fracture mechanics,\cite{aour2007coupled} fluid-structure interaction,\cite{estorff1991fem} acoustics,\cite{hiptmair2006stabilized} and electromagnetics.\cite{matsuoka1988calculation,hiptmair2008stabilized,bruckner20123d}
-On the other hand, the PBE has been solved with hybrid numerical methods in the past: for example, by coupling finite differences with boundary elements\cite{boschitsch2004hybrid} or finite elements\cite{xie2016new,ying2018hybrid} to solve the nonlinear PBE in a specific region, and to implement modifications to the PBE model ({\it ie.} the size-modified PBE).
+On the other hand, the PBE has been solved with hybrid numerical methods in the past: for example, by coupling finite differences with boundary elements\cite{boschitsch2004hybrid} or finite elements\cite{xie2016new,ying2018hybrid} to solve the nonlinear PBE in a specific region, and to implement modifications to the PBE model (i.e. the size-modified PBE).
 To the best of our knowledge, this is the first time finite and boundary elements have been combined in this application.
 
-In this paper, we prototype this principle with the simplest implementation possible: a Johnson--N\'ed\'elec\cite{johnson1980coupling} coupling, where we solve using mass-matrix and diagonal preconditioning and whithout distributed memory execution.
-This limits the size of problems we can access currently, however, it sets the basis for future developments that use more elaborate formulations and algorithms that are readily available in open source software libraries.
+In this paper, we prototype this principle with the simplest implementation possible: a Johnson--N\'ed\'elec\cite{johnson1980coupling} coupling, where we solve using mass-matrix and diagonal preconditioning and without distributed memory execution.
+This limits the size of problems we can access currently, however, it sets the basis for future developments that use more elaborate formulations and algorithms that are readily available in open-source software libraries.
 In this work, we use the boundary element library Bempp-cl\cite{BetckeScroggs2021} and the finite element library FEniCSx\cite{BasixJoss,BasixDofTransformations}.
 These libraries are easy to use and their full functionalities may be accessed via their Python interfaces, making them ideal tools for easily implementing problems like this as well as for exploring computational efficiency and moving towards tackling large-scale problems, such as a full viral capsid.\cite{MartinezETal2019,wang2021high}
 We hope this work will inspire research along these lines.
