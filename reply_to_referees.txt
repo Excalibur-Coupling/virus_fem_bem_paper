@@ -6,16 +6,16 @@ As the authors have noted, the solution of the Poisson–Boltzmann (PB) model is
 The authors propose a combination of FEM and BEM (FEM-BEM) to leverage the advantages of both methods. This approach shows promise and could be valuable if a robust software package is developed. However, significant changes are required for this work to meet the standard in the field. My concerns are outlined below.
 
 Reply:
-We thank this reviewer for the careful revision. We are glad to see that this reviewer appreciates the potential of our work, and we hope that the substantial changes of this new version satisfy his/her concerns.
+We thank this reviewer for the careful revision. We are glad to see that this reviewer appreciates the potential of our work, and we hope that the substantial changes in this new version satisfy his/her concerns.
 
 
 Comment 1: 
 A comparison of the Kirkwood sphere can be found in the following reference: 'Treatment of charge singularities in implicit solvent models', The Journal of Chemical Physics, 127, 114106, 2007. In this work, four different cases were studied, involving up to six charges, and convergence orders were reported almost 20 years ago.   
  
 Reply:
-As the reviewer points out, in that reference there is a comparison with the Kirkwood sphere for various charge distributions (with up to 6 charges). In the original version of the manuscript we also included this test case, however, considering four rather than six charges. In this test case, one of the charges was placed 1 Å away from the surface, which, according to that same reference, is a challenging setup, and showed the correct order of convergence. We don't think that performing a study similar to the cited paper would add more information to the reader.  
+As the reviewer points out, in that reference, there is a comparison with the Kirkwood sphere for various charge distributions (with up to 6 charges). In the original version of the manuscript we also included this test case, however, considering four rather than six charges. In this test case, one of the charges was placed 1 Å away from the surface, which, according to that same reference, is a challenging setup, and showed the correct order of convergence. We don't think that performing a study similar to the cited paper would add more information to the reader.  
 
-However, we thank the reviewer for pointing us to this reference, and we apologize for missing it in the original manuscript. We have added it in the new version. 
+However, we thank the reviewer for pointing us to this reference, and we apologise for missing it in the original manuscript. We have added it to the new version. 
 
 
 Modifications:
@@ -26,10 +26,10 @@ Comment 2:
 APBS is indeed a widely used Poisson-Boltzmann (PB) model. However, it is worth noting that APBS is designed for first-order convergence, which can be affected by surface irregularities in the solvent-excluded surface (SES) model for biomolecules. Therefore, a direct comparison with APBS may not be sufficient to establish the superiority of the proposed method.
 
 Reply:
-As the reviewer points out, APBS converges as first order. Even though this is not the fastest converging method, compared to, for example, MIBPB's second order convergence, it does converge to the correct solution. The goal of the result highlighted by the reviewer was to ensure that our code converged to that same answer, and thus verify code correctness. However, we do agree with the reviewer that comparison with APBS only may not be enough evidence to make our point compelling. This is why we added results showing a thorough comparison of binding energy calculations with several well-established Poisson-Boltzmann codes.
+As the reviewer points out, APBS converges as first order. Even though this is not the fastest converging method, compared to, for example, MIBPB's second-order convergence, it does converge to the correct solution. The goal of the result highlighted by the reviewer was to ensure that our code converged to that same answer, and thus verify code correctness. However, we do agree with the reviewer that comparison with APBS only may not be enough evidence to make our point compelling. This is why we added results showing a thorough comparison of binding energy calculations with several well-established Poisson-Boltzmann codes.
 
 Modifications:
-We added extensive tests of binding energy calculations, and compared them to several well-established codes. 
+We added extensive tests of binding energy calculations and compared them to several well-established codes. 
 
 
 
@@ -39,11 +39,11 @@ Furthermore, the comparison conducted in the study involved only four proteins, 
 Examining the consistency over different mesh sizes is also a standard approach in the field. For many poorly designed methods, this poses a severe challenge, and many researchers simply refuse to engage in this pursuit, ultimately making no progress in solving the PB problem despite years of struggle. I suggest the authors examine the proposed FEM-BEM method using a set of 153 biomolecules, as was done in the study titled 'Accurate, Robust, and Reliable Calculations of Poisson-Boltzmann Binding Energies' published in the Journal of Computational Chemistry, 2017, 38, 941–948. In fact, Fenley and coworkers initially proposed this challenge. It is interesting for the authors to compare the performance of their method with that of the aforementioned JCC paper. 
 
 Reply:
-We thank the reviewer for this comment, and his/her concern to enhance the robustness of our work. As suggested by the reviewer, we examined the JCC paper, and went on to perform the calculations for the 153 structures, with the corresponding binding energy results. Biding energies are extremely challenging, as they are small differences between much larger solvation energies, making accuracy key. Inspired by a previous result reported the original manuscript,we chose a mesh refinement with low enough error in the solvation energy to perform the binding energy calculations on the data set. We extracted the results from the JCC paper suggested by the reviewer, and a previous JCTC paper by Harris, Boschitsch, and Fenley (9, 3677, 2013) that runs the same data set, to compare our results against APBS, MIBPB, CPB, PBSA, and Delphi. We saw that in all cases our results where within the range of the other software, evidencing code correctness. 
+We thank the reviewer for this comment, and his/her concern to enhance the robustness of our work. As suggested by the reviewer, we examined the JCC paper and went on to perform the calculations for the 153 structures, with the corresponding binding energy results. Biding energies are extremely challenging, as there are small differences between much larger solvation energies, making accuracy key. Inspired by a previous result reported in the original manuscript, we chose a mesh refinement with low enough error in the solvation energy to perform the binding energy calculations on the data set. We extracted the results from the JCC paper suggested by the reviewer, and a previous JCTC paper by Harris, Boschitsch, and Fenley (9, 3677, 2013) that runs the same data set, to compare our results against APBS, MIBPB, CPB, PBSA, and Delphi. We saw that in all cases our results were within the range of the other software, evidencing code correctness. 
 
 
 Modifications:
-We added extensive tests of binding energy calculations, and compared them to several well-established codes. 
+We added extensive tests of binding energy calculations and compared them to several well-established codes. 
 
 
 Reviewer: 2
@@ -52,13 +52,13 @@ Preamble:
 This paper presents a novel FEM-BEM method for approximating the solution to the linearized Poisson-Boltzmann equation.  The authors provide a good overview of their methodology with useful comparisons to results obtained with the APBS software package.  The paper is a useful contribution, but should be revised before it is published.
 
 Reply:
-We truly appreciate the work by the reviewer, and are happy to see he/she considers it a useful contribution.
+We truly appreciate the work of the reviewer and are happy to see he/she considers it a useful contribution.
 
 Comment 1:
 1) It should be more clear that the methodology presented in this paper is for the linearised Poisson-Boltzmann equation (LPBE) that results from approximating sinh(x) with x.  The Poisson-Boltzmann equation (PBE) can be found in many of the cited papers, including https://doi.org/10.1073/pnas.181342398
 
 Reply:
-The reviewer is completely correct, and we apologize for not making this point clearer in the original manuscript. We have edited accordingly.
+The reviewer is completely correct, and we apologise for not making this point clearer in the original manuscript. We have edited it accordingly.
 
 Modifications:
 XXXXXXXXX
@@ -67,7 +67,7 @@ Comment 2:
 2) That said, providing a fast method for solving the LPBE is still very useful for many reasons including: (a) Newton-based solvers for the PBE solve the LPBE at each step, (b) for many problems approximating sinh(x) by x does not introduce a large error.  However, the authors should still be clear that they are solving the LPBE and not the PBE, and/or they should extend the discussion/algorithm/results to include the PBE.
 
 Reply:
-Although we agree with the reviewer that we were not clear enough that the linear version was being solved and that solving the nonlinear PBE is extremely important, we believe that adding results that include the nonlinear PBE is out of scope of the current manuscript. In fact, this was the original motivation behind developing our FEM-BEM coupled approach, as BEM cannot solve the nonlinear equation, which is why we mention this in the introduction. However, in the development process we realized there are several milestones that need to be reached before coupling FEM and BEM for the nonlinear problem, and this work is a first step that will take us there. Then, this comment is pointing at future directions of development.  
+Although we agree with the reviewer that we were not clear enough that the linear version was being solved and that solving the nonlinear PBE is extremely important, we believe that adding results that include the nonlinear PBE is out of the scope of the current manuscript. In fact, this was the original motivation behind developing our FEM-BEM coupled approach, as BEM cannot solve the nonlinear equation, which is why we mention this in the introduction. However, in the development process, we realised there are several milestones that need to be reached before coupling FEM and BEM for the nonlinear problem, and this work is the first step that will take us there. Then, this comment points to future directions of development.  
 
 Modifications:
 None required.
@@ -82,5 +82,5 @@ Minor comments:
 6) analytical methods -> analytic methods, analytical expression -> analytic expression, analytical solution -> analytic solution
 
 Reply:
-Thank you very much for reading our manuscript carefully. We have edited accordingly.
+Thank you very much for reading our manuscript carefully. We have edited it accordingly.
 
