@@ -19,7 +19,7 @@ The present article describes a methodology to overcome some of those limitation
 This approach brings the best of both worlds---the flexibility of FEM and the efficiency of BEM---all in an accurate description of the solute molecule.
 FEM-BEM coupling is a popular technique in the context of mixed linear-nonlinear models,\cite{carstensen1995coupling,aurada2013classical} fracture mechanics,\cite{aour2007coupled} fluid-structure interaction,\cite{estorff1991fem} acoustics,\cite{hiptmair2006stabilized} and electromagnetics.\cite{matsuoka1988calculation,hiptmair2008stabilized,bruckner20123d}
 On the other hand, the PBE has been solved with hybrid numerical methods in the past: for example, by coupling finite differences with boundary elements\cite{boschitsch2004hybrid} or finite elements\cite{xie2016new,ying2018hybrid} to solve the nonlinear PBE in a specific region, and to implement modifications to the PBE model (i.e. the size-modified PBE).
-To the best of our knowledge, this is the first time finite and boundary elements have been combined in this application.
+To the best of our knowledge, this is the first time finite and boundary elements have been combined in this application. We are proposing a coupling scheme for the linear Poisson-Boltzmann equation.
 
 In this paper, we prototype this principle with the simplest implementation possible: a Johnson--N\'ed\'elec\cite{johnson1980coupling} coupling, where we solve using mass-matrix and diagonal preconditioning and without distributed memory execution.
 This limits the size of problems we can access currently, however, it sets the basis for future developments that use more elaborate formulations and algorithms that are readily available in open-source software libraries.

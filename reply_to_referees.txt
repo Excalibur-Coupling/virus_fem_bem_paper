@@ -61,7 +61,7 @@ Reply:
 The reviewer is completely correct, and we apologise for not making this point clearer in the original manuscript. We have edited it accordingly.
 
 Modifications:
-XXXXXXXXX
+We have added linearised phrase in the abstract, a sentence in 'We are proposing a coupling scheme for the linear Poisson-Boltzmann equation.' in the introduction and a sentence ' The linearised Poisson-Boltzmann equation that results from approximating $\sinh(x)$ with $x$ follows' in the methodology to clarify the equation considered. 
 
 Comment 2:
 2) That said, providing a fast method for solving the LPBE is still very useful for many reasons including: (a) Newton-based solvers for the PBE solve the LPBE at each step, (b) for many problems approximating sinh(x) by x does not introduce a large error.  However, the authors should still be clear that they are solving the LPBE and not the PBE, and/or they should extend the discussion/algorithm/results to include the PBE.
