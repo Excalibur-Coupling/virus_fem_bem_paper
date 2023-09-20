@@ -1,6 +1,6 @@
 \subsection*{\sffamily \large The implicit solvent model}
 
-The implicit solvent model\cite{RouxSimonson1999, DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson--Boltzmann equation governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson equation governs in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous across the surface. The linearised Poisson-Boltzmann equation that results from approximating $\sinh(x)$ with $x$ follows
+The implicit solvent model\cite{RouxSimonson1999, DecherchiETal2015} can be described mathematically as a coupled system of partial differential equations, where the Poisson equation governs in the solvent region ($\Omega_1$ in Figure \ref{fig:implicit_molecule}), and the Poisson--Boltzmann equation governs in the solute region ($\Omega_2$ in Figure \ref{fig:implicit_molecule}). These regions are interfaced by the molecular surface ($\Gamma$), where the potential ($\phi$) and electric displacement ($\epsilon\partial\phi/\partial\mathbf{n}$) are continuous across the surface. The linearised Poisson-Boltzmann equation that results from approximating $\sinh(x)$ with $x$ follows
 %
 \begin{subequations}
 \label{eq:pbe}
