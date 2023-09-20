@@ -13,9 +13,9 @@ Comment 1:
 A comparison of the Kirkwood sphere can be found in the following reference: 'Treatment of charge singularities in implicit solvent models', The Journal of Chemical Physics, 127, 114106, 2007. In this work, four different cases were studied, involving up to six charges, and convergence orders were reported almost 20 years ago.   
  
 Reply:
-As the reviewer points out, in that reference, there is a comparison with the Kirkwood sphere for various charge distributions (with up to 6 charges). In the original version of the manuscript we also included this test case, however, considering four rather than six charges. In this test case, one of the charges was placed 1 Å away from the surface, which, according to that same reference, is a challenging setup, and showed the correct order of convergence. We don't think that performing a study similar to the cited paper would add more information to the reader.  
+As the reviewer points out, in that reference there is a comparison with the Kirkwood sphere for various charge distributions (with up to 6 charges). In the original version of the manuscript we also included this test case, however, considering four rather than six charges. In this test case, one of the charges was placed 1 Å away from the surface, which, according to that same reference, is a challenging setup, and showed the correct order of convergence. We don't think that performing a study similar to the cited paper would add more information to the reader.  
 
-However, we thank the reviewer for pointing us to this reference, and we apologise for missing it in the original manuscript. We have added it to the new version. 
+However, we thank the reviewer for pointing us to this reference, and we apologize for missing it in the original manuscript. We have added it to the new version. 
 
 
 Modifications:
@@ -41,6 +41,7 @@ Examining the consistency over different mesh sizes is also a standard approach 
 Reply:
 We thank the reviewer for this comment, and his/her concern to enhance the robustness of our work. As suggested by the reviewer, we examined the JCC paper and went on to perform the calculations for the 153 structures, with the corresponding binding energy results. Biding energies are extremely challenging, as there are small differences between much larger solvation energies, making accuracy key. Inspired by a previous result reported in the original manuscript, we chose a mesh refinement with low enough error in the solvation energy to perform the binding energy calculations on the data set. We extracted the results from the JCC paper suggested by the reviewer, and a previous JCTC paper by Harris, Boschitsch, and Fenley (9, 3677, 2013) that runs the same data set, to compare our results against APBS, MIBPB, CPB, PBSA, and Delphi. We saw that in all cases our results were within the range of the other software, evidencing code correctness. 
 
+We would like to note that some of the 153 structures of the data set had cavities where water molecules can fit. In a finite difference description, these regions are naturally considered as having the bulk water permittivity. Then, we had to consider them accordingly to make an appropriate comparison with the other codes. This meant that we had a variable permittivity inside the molecular region, which is one of the motivations behind this work, making our point of using FEM in the molecule more compelling. 
 
 Modifications:
 We added extensive tests of binding energy calculations and compared them to several well-established codes. 
@@ -58,7 +59,7 @@ Comment 1:
 1) It should be more clear that the methodology presented in this paper is for the linearised Poisson-Boltzmann equation (LPBE) that results from approximating sinh(x) with x.  The Poisson-Boltzmann equation (PBE) can be found in many of the cited papers, including https://doi.org/10.1073/pnas.181342398
 
 Reply:
-The reviewer is completely correct, and we apologise for not making this point clearer in the original manuscript. We have edited it accordingly.
+The reviewer is completely correct, and we apologize for not making this point clearer in the original manuscript. We have edited it accordingly.
 
 Modifications:
 We have added linearised phrase in the abstract, a sentence in 'We are proposing a coupling scheme for the linear Poisson-Boltzmann equation.' in the introduction and a sentence ' The linearised Poisson-Boltzmann equation that results from approximating $\sinh(x)$ with $x$ follows' in the methodology to clarify the equation considered. 
@@ -67,7 +68,7 @@ Comment 2:
 2) That said, providing a fast method for solving the LPBE is still very useful for many reasons including: (a) Newton-based solvers for the PBE solve the LPBE at each step, (b) for many problems approximating sinh(x) by x does not introduce a large error.  However, the authors should still be clear that they are solving the LPBE and not the PBE, and/or they should extend the discussion/algorithm/results to include the PBE.
 
 Reply:
-Although we agree with the reviewer that we were not clear enough that the linear version was being solved and that solving the nonlinear PBE is extremely important, we believe that adding results that include the nonlinear PBE is out of the scope of the current manuscript. In fact, this was the original motivation behind developing our FEM-BEM coupled approach, as BEM cannot solve the nonlinear equation, which is why we mention this in the introduction. However, in the development process, we realised there are several milestones that need to be reached before coupling FEM and BEM for the nonlinear problem, and this work is the first step that will take us there. Then, this comment points to future directions of development.  
+Although we agree with the reviewer that we were not clear enough that the linear version was being solved and that solving the nonlinear PBE is extremely important, we believe that adding results that include the nonlinear PBE is out of the scope of the current manuscript. In fact, this was the original motivation behind developing our FEM-BEM coupled approach, as BEM cannot solve the nonlinear equation, which is why we mention this in the introduction. However, in the development process, we realied there are several milestones that need to be reached before coupling FEM and BEM for the nonlinear problem, and this work is the first step that will take us there. Then, this comment points to future directions of development.  
 
 Modifications:
 None required.
