@@ -101,7 +101,7 @@ where $\Delta G_{solv, complex}$ is the solvation energy of the complex, $\Delta
 This calculation presents a major challenge, as small errors in solvation energy may have a large impact result in in binding energy, making accuracy crucial.
 
 Following the data set proposed by Fenley and co-workers,\cite{HarrisBoschitcshFenley2013} available in \url{http://www.sb.fsu.edu/~mfenley/convergence/downloads/convergence_pqr_sets.tar.gz}, and later used by Wei {\it et al.}\cite{nguyen2017accurate} to assess the accuracy of different Poisson-Boltzmann solvers, we tested our method by computing binding energies. 
-This data set consists of three families of structures: DNA-drug complexes, different versions of the barnase-barstar complex, and RNA-peptide complexes. Following the problem setting for these data sets, we use $\epsilon_1=1$, $\epsilon_2=80$ and an inverse of the Debye length of $\kappa=0.10265\,\text{\AA}^{-1}$.
+This data set consists of 51 complexes, totalling 153 structures, separated in three families: DNA-drug complexes, different versions of the barnase-barstar complex, and RNA-peptide complexes. Following the problem setting for these data sets, we use $\epsilon_1=1$, $\epsilon_2=80$ and an inverse of the Debye length of $\kappa=0.10265\,\text{\AA}^{-1}$.
 
 According to the arginine results in Figure \ref{fig:arg_constant_energy}, a mesh density of 24 vertices per \AA$^2$ gives a solvation energy that is close to the true solution for a realistic geometry. 
 In that case, the difference in solvation energy between calculations using finite element grids generated from a surface mesh of 8.6 and 24.5 vertices per \AA$^2$ (a 3$\times$ refinement) is less than 1\%.
@@ -111,10 +111,11 @@ Several structures in the database contained voids inside the molecular region w
 In a finite difference description, these voids are naturally considered as pockets of solvent, with the permittivity of water ($\epsilon=\epsilon_2$).
 Regardless if this is an appropriate physical model, we also placed the permittivity of bulk water inside cavities for comparison purposes.
 In the FEM formalism, we had to detect the elements contained by cavities and use a piece-wise constant varying description of the permittivity inside the molecular region, which can be done without any modification in the formulation. 
-A BEM-BEM formulation can also account for cavities this way,\cite{AltmanBardhanWhiteTidor09, CooperBardhanBarba2014} but involves certain adjustments in the stiffness matrix.
+A BEM-BEM formulation can also account for cavities as regions with water's bulk permittivity,\cite{AltmanBardhanWhiteTidor09, CooperBardhanBarba2014} but involves certain adjustments in the stiffness matrix.
 
 Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} show the binding energies of structures of DNA-drug complexes, barnase-barstar complexes, and RNA-peptide complexes, respectively, presented in Fenley's data set.\cite{HarrisBoschitcshFenley2013} The data for CPB\cite{HarrisBoschitcshFenley2013} and MIBPB, Delphi, APBS and PBSA were taken from the literature,\cite{nguyen2017accurate} for the finest mesh reported. 
-From Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} it is evident that our FEM-BEM approach gives results that are within the range of the other software.
+From Figures \ref{fig:dna_drug}, \ref{fig:barnase_barstar}, and \ref{fig:rna_peptide} it is evident that our FEM-BEM approach gives results that are within the range of the difference between other software for all 51 complexes.
+Given the challenging nature of binding energy calculations, and that our results are consistently comparable to other widely-trusted solvers that use a different numerical scheme for all 51 complexes, we can positively conclude on the correctness of our code. 
 
 \begin{figure}
 \centering
